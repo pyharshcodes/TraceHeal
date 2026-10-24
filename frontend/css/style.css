@@ -3865,6 +3865,41 @@ code, pre {
   transition: all 0.4s ease;
 }
 
+.hero-bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.32;
+  filter: contrast(1.15) brightness(0.9);
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.hero-bg-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.28) 0%, rgba(15, 23, 42, 0.85) 70%, rgba(11, 16, 32, 0.94) 100%);
+  z-index: 1;
+  pointer-events: none;
+  transition: background 0.5s ease;
+}
+
+.autoheal-hero-banner.nominal .hero-bg-video-overlay {
+  background: radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.22) 0%, rgba(15, 23, 42, 0.85) 70%, rgba(11, 16, 32, 0.94) 100%);
+}
+
+.autoheal-hero-banner > *:not(.hero-bg-video):not(.hero-bg-video-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
 .autoheal-hero-banner::before {
   content: "";
   position: absolute;
@@ -3874,6 +3909,7 @@ code, pre {
   height: 2px;
   background: linear-gradient(90deg, #ef4444, #f59e0b, #3b82f6, #10b981);
   opacity: 0.8;
+  z-index: 3;
 }
 
 .autoheal-hero-banner.nominal {
