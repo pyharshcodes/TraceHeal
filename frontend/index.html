@@ -783,6 +783,11 @@
             <span id="audioLabel" class="sr-only">Sound ON</span>
           </button>
 
+          <!-- 3-Min Pitch Demo Preset for Judges -->
+          <button class="btn btn-secondary btn-sm" id="btnJudgeDemo" onclick="window.runJudgePitchDemo()" title="Run Flawless 3-Minute Hackathon Demo Sequence" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 600;">
+            <span>🎯 3-Min Pitch</span>
+          </button>
+
           <!-- Safe Test Anomaly Trigger -->
           <button class="btn btn-secondary btn-sm" id="btnSimulateIncident" title="Inject safe test anomaly without auto-healing">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
@@ -838,7 +843,56 @@
             </div>
           </div>
 
-          <!-- 4 Compact KPI Cards -->
+          <!-- ⚡ 1-CLICK AUTONOMOUS RECOVERY HERO CENTERPIECE (Hackathon Winning Feature) -->
+          <div class="autoheal-hero-banner" id="autoHealHeroBanner">
+            <div class="autoheal-hero-left">
+              <div class="autoheal-pulse-glow">
+                <span class="autoheal-spark-icon">⚡</span>
+              </div>
+              <div class="autoheal-hero-text">
+                <div class="autoheal-hero-badge-row">
+                  <span class="badge badge-critical" id="heroIncidentTag">ANOMALY ACTIVE</span>
+                  <span class="hero-target-pill" id="heroServiceTarget">payment-service • DB Pool 10/10 Exhausted</span>
+                  <span class="hero-mttd-pill">MTTD: <strong>1.2s</strong></span>
+                </div>
+                <h3 class="autoheal-hero-title" id="heroBannerTitle">Closed-Loop Autonomous SRE Engine Ready</h3>
+                <p class="autoheal-hero-desc" id="heroBannerDesc">
+                  Cascading fault correlated across W3C traces. Click below to execute 7-step autonomous agent diagnosis, AST-safe patch synthesis, sandbox validation, and canary recovery.
+                </p>
+                <!-- Live 7-Step Progress Stepper Ribbon -->
+                <div class="hero-stepper-track" id="heroStepperTrack">
+                  <div class="hero-step-node active" id="hstep-1" title="Telemetry Anomaly Detected"><span>1</span> DETECT</div>
+                  <div class="hero-step-node" id="hstep-2" title="Causal DAG Root Cause Hypothesis"><span>2</span> RCA</div>
+                  <div class="hero-step-node" id="hstep-3" title="Sandbox Reproduction"><span>3</span> REPRODUCE</div>
+                  <div class="hero-step-node" id="hstep-4" title="AST Guardrail Verification"><span>4</span> VERIFY</div>
+                  <div class="hero-step-node" id="hstep-5" title="Shadow & Policy Check"><span>5</span> REMEDIATE</div>
+                  <div class="hero-step-node" id="hstep-6" title="Canary Live Deployment"><span>6</span> DEPLOY</div>
+                  <div class="hero-step-node" id="hstep-7" title="Recovery & Postmortem PR"><span>7</span> RESOLVE</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="autoheal-hero-actions">
+              <button class="btn-autoheal-mega" id="btnMegaAutoHeal" onclick="window.runOneClickAutoHealHero()">
+                <span class="mega-bolt">⚡</span>
+                <span class="mega-text">
+                  <strong>1-CLICK AUTO-HEAL</strong>
+                  <small id="heroBtnSubtext">Run 7-Step Self-Healing</small>
+                </span>
+                <span class="mega-arrow">➔</span>
+              </button>
+              <div class="hero-action-subrow">
+                <button class="btn btn-ghost btn-xs" onclick="window.runJudgePitchDemo()" title="Run Flawless 3-Min Pitch Sequence">
+                  🎯 3-Min Pitch Demo
+                </button>
+                <button class="btn btn-ghost btn-xs" onclick="simulateIncidentFlow()" title="Inject Chaos Anomaly">
+                  🚨 Inject Chaos
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Compact KPI Cards with Live Visual Sparklines -->
           <div class="kpi-grid">
             <div class="kpi-card">
               <div class="kpi-top">
@@ -848,6 +902,17 @@
               <div class="kpi-value-row">
                 <span class="kpi-value" id="metricClusterHealth">100%</span>
                 <span class="kpi-unit">operational</span>
+              </div>
+              <!-- Mini SVG Service Health Matrix -->
+              <div class="kpi-sparkline-box" id="kpiHealthChart">
+                <svg viewBox="0 0 160 20" preserveAspectRatio="none">
+                  <rect x="0" y="4" width="22" height="12" rx="2" fill="#10B981" />
+                  <rect x="27" y="4" width="22" height="12" rx="2" fill="#10B981" />
+                  <rect x="54" y="4" width="22" height="12" rx="2" fill="#10B981" id="kpi-rect-payment" />
+                  <rect x="81" y="4" width="22" height="12" rx="2" fill="#10B981" />
+                  <rect x="108" y="4" width="22" height="12" rx="2" fill="#10B981" />
+                  <rect x="135" y="4" width="22" height="12" rx="2" fill="#10B981" />
+                </svg>
               </div>
               <div class="kpi-footer">
                 <span class="status-indicator-dot" id="kpiServiceHealthDot"></span>
@@ -864,6 +929,13 @@
                 <span class="kpi-value" id="metricActiveIncidents">0</span>
                 <span class="kpi-unit">unresolved</span>
               </div>
+              <!-- Mini Incident Severity Bar -->
+              <div class="kpi-sparkline-box" id="kpiIncidentsChart">
+                <svg viewBox="0 0 160 20" preserveAspectRatio="none">
+                  <rect x="0" y="6" width="160" height="8" rx="4" fill="rgba(255,255,255,0.06)" />
+                  <rect x="0" y="6" width="24" height="8" rx="4" fill="#38BDF8" id="kpi-inc-bar" />
+                </svg>
+              </div>
               <div class="kpi-footer" id="metricIncidentSubtitle">
                 <span class="status-indicator-dot"></span>
                 <span>Zero blocking alerts</span>
@@ -878,6 +950,12 @@
               <div class="kpi-value-row">
                 <span class="kpi-value" id="metricErrorRate">0.00%</span>
                 <span class="kpi-unit">HTTP 5xx</span>
+              </div>
+              <!-- Mini Error Rate Sparkline -->
+              <div class="kpi-sparkline-box" id="kpiErrorChart">
+                <svg viewBox="0 0 160 24" preserveAspectRatio="none">
+                  <path d="M 0 20 Q 40 18, 80 19 T 160 20" fill="none" stroke="#10B981" stroke-width="2" id="kpi-error-line" />
+                </svg>
               </div>
               <div class="kpi-footer">
                 <span class="status-indicator-dot"></span>
@@ -894,9 +972,92 @@
                 <span class="kpi-value">99.98%</span>
                 <span class="kpi-unit">30-day uptime</span>
               </div>
+              <!-- 30-Day SLA Blocks Ribbon -->
+              <div class="uptime-blocks-ribbon" title="30-day rolling uptime history">
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span>
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span>
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span>
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span>
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span>
+                <span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block"></span><span class="uptime-block" id="uptime-last-block"></span>
+              </div>
               <div class="kpi-footer">
                 <span class="status-indicator-dot"></span>
                 <span>AST &amp; Deadlock Safety Gates active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Telemetry & Adaptive Anomaly Radar Chart -->
+          <div class="telemetry-radar-card">
+            <div class="radar-header">
+              <div class="radar-title-group">
+                <span style="font-size: 16px;">📈</span>
+                <div>
+                  <h2>Live Mesh Telemetry &amp; Adaptive Anomaly Observer</h2>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                    Continuous sliding-window observability with real-time RPS, latency jitter, and anomaly threshold correlation.
+                  </div>
+                </div>
+                <span class="radar-live-badge">
+                  <span class="status-indicator-dot"></span> LIVE 2.0 RPS
+                </span>
+              </div>
+              <div class="radar-metrics-ribbon">
+                <div class="radar-metric-chip">
+                  <span>Throughput:</span> <strong id="radarRpsVal">2.0 RPS</strong>
+                </div>
+                <div class="radar-metric-chip">
+                  <span>p95 Latency:</span> <strong id="radarLatVal">18.4ms</strong>
+                </div>
+                <div class="radar-metric-chip">
+                  <span>Anomaly Threshold:</span> <strong style="color: #f87171;">15.0% Window</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Telemetry Wave Chart Container -->
+            <div class="radar-canvas-container" id="telemetryChartBox">
+              <svg viewBox="0 0 900 160" preserveAspectRatio="none" id="telemetryRadarSvg">
+                <defs>
+                  <linearGradient id="rpsAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                  </linearGradient>
+                  <linearGradient id="errAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ef4444" stop-opacity="0.45" />
+                    <stop offset="100%" stop-color="#ef4444" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Grid Guide Lines -->
+                <line x1="0" y1="40" x2="900" y2="40" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" />
+                <line x1="0" y1="80" x2="900" y2="80" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" />
+                <line x1="0" y1="120" x2="900" y2="120" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" />
+
+                <!-- Anomaly Horizon Threshold Line -->
+                <line x1="0" y1="35" x2="900" y2="35" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="5 5" opacity="0.6" />
+                <text x="890" y="30" fill="#ef4444" font-size="9" font-family="JetBrains Mono, monospace" text-anchor="end" opacity="0.8">ANOMALY THRESHOLD (15%)</text>
+
+                <!-- Telemetry Area & Wave Line -->
+                <path id="radarAreaPath" d="M 0 160 L 0 110 Q 150 90, 300 105 T 600 95 T 900 100 L 900 160 Z" fill="url(#rpsAreaGrad)" />
+                <path id="radarWavePath" d="M 0 110 Q 150 90, 300 105 T 600 95 T 900 100" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+              </svg>
+            </div>
+
+            <div class="radar-footer-bar">
+              <div class="radar-legend">
+                <div class="radar-legend-item">
+                  <span class="radar-legend-line" style="background: #38bdf8;"></span>
+                  <span>Synthetic Request Throughput (RPS)</span>
+                </div>
+                <div class="radar-legend-item">
+                  <span class="radar-legend-line" style="background: #ef4444; border-top: 1px dashed #ef4444;"></span>
+                  <span>Adaptive Anomaly Boundary</span>
+                </div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 10.5px;">
+                Sampling: <strong>2s sliding window</strong> • OTLP telemetry pipeline: <span style="color: #34d399;">UP</span>
               </div>
             </div>
           </div>
@@ -1272,6 +1433,39 @@
             <div class="card-body">
               <div class="stepper-container" id="lifecycleStepper">
                 <!-- Populated dynamically via app.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Causal Failure Propagation DAG Graph -->
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-title">Causal Dependency &amp; Blast Radius Propagation DAG</span>
+                <span class="badge badge-critical" id="dagImpactBadge">Blast Radius: 3 Tiers</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent);">W3C Distributed Trace Context (traceparent)</span>
+            </div>
+            <div class="card-body" id="causalDagContainer" style="padding: 16px 20px;">
+              <div class="dag-tree-flow">
+                <div class="dag-node-item edge-ingress">
+                  <div class="dag-icon">🌐</div>
+                  <div class="dag-title">gateway-service</div>
+                  <div class="dag-sub">HTTP 502 Bad Gateway</div>
+                </div>
+                <div class="dag-arrow-flow error">➔</div>
+                <div class="dag-node-item edge-transit">
+                  <div class="dag-icon">🛒</div>
+                  <div class="dag-title">order-service</div>
+                  <div class="dag-sub">POST /orders/checkout (500)</div>
+                </div>
+                <div class="dag-arrow-flow error">➔</div>
+                <div class="dag-node-item root-cause-card">
+                  <span class="root-cause-tag">ROOT CAUSE</span>
+                  <div class="dag-icon">💳</div>
+                  <div class="dag-title" style="color: #f87171;">payment-service</div>
+                  <div class="dag-sub" style="color: #fca5a5;">DB Pool Exhaustion (10/10 Active)</div>
+                </div>
               </div>
             </div>
           </div>

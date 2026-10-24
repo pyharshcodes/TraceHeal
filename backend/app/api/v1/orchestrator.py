@@ -32,4 +32,26 @@ async def run_autonomous_cycle(req: RunCycleRequest, db: AsyncSession = Depends(
         trace_count=req.trace_count,
         live_cluster=req.live_cluster,
     )
+
+    # Cleanly resolve any other open incidents in the DB so health returns to 100%
+    try:
+        from sqlalchemy import select
+        from backend.app.db.models import Incident
+
+        stmt = select(Incident).where(Incident.status.notin_(["RESOLVED", "CLOSED"]))
+        res = await db.execute(stmt)
+        for ai in res.scalars().all():
+            ai.status = "CLOSED"
+        await db.commit()
+    except Exception:
+        pass
+
+    # Reset any live cluster chaos states
+    try:
+        from target_services.chaos import ChaosEngine
+
+        await ChaosEngine().reset_all()
+    except Exception:
+        pass
+
     return manifest

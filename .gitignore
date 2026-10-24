@@ -20,3 +20,4 @@ backup/
 .vercel/
 *.log
 
+.vercel

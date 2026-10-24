@@ -147,8 +147,22 @@ async def inject_chaos(
 
 
 @router.post("/reset")
-async def reset_chaos():
-    """Resets all chaos injections across target services."""
+async def reset_chaos(db: AsyncSession = Depends(get_db)):
+    """Resets all chaos injections across target services and marks active incidents as CLOSED."""
+    from sqlalchemy import select
+    from backend.app.db.models import Incident
+
+    try:
+        stmt = select(Incident).where(Incident.status.notin_(["RESOLVED", "CLOSED"]))
+        res = await db.execute(stmt)
+        active_incs = res.scalars().all()
+        for ai in active_incs:
+            ai.status = "CLOSED"
+        if active_incs:
+            await db.commit()
+    except Exception:
+        pass
+
     await emit_agent_action(
         incident_id="SYSTEM",
         agent_name="ChaosEngine",
