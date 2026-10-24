@@ -1,0 +1,174 @@
+version: "3.8"
+
+services:
+  traceheal-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-core
+    ports:
+      - "8000:8000"
+    environment:
+      - TRACEHEAL_ENV=production
+      - TRACEHEAL_DEBUG=false
+      - TRACEHEAL_HOST=0.0.0.0
+      - TRACEHEAL_PORT=8000
+      - TRACEHEAL_DATABASE_URL=sqlite+aiosqlite:////app/data/traceheal.db
+      - TRACEHEAL_GATEWAY_SERVICE_URL=http://gateway-service:8080
+      - TRACEHEAL_ORDER_SERVICE_URL=http://order-service:8081
+      - TRACEHEAL_PAYMENT_SERVICE_URL=http://payment-service:8082
+    volumes:
+      - traceheal-data:/app/data
+      - traceheal-patches:/app/patches
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    restart: unless-stopped
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-gateway
+    command: ["uvicorn", "target_services.gateway_service:app", "--host", "0.0.0.0", "--port", "8080"]
+    ports:
+      - "8080:8080"
+    environment:
+      - ORDER_SERVICE_URL=http://order-service:8081
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-order
+    command: ["uvicorn", "target_services.order_service:app", "--host", "0.0.0.0", "--port", "8081"]
+    ports:
+      - "8081:8081"
+    environment:
+      - INVENTORY_SERVICE_URL=http://inventory-service:8083
+      - PAYMENT_SERVICE_URL=http://payment-service:8082
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-payment
+    command: ["uvicorn", "target_services.payment_service:app", "--host", "0.0.0.0", "--port", "8082"]
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-inventory
+    command: ["uvicorn", "target_services.inventory_service:app", "--host", "0.0.0.0", "--port", "8083"]
+    ports:
+      - "8083:8083"
+    environment:
+      - PORT=8083
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-auth
+    command: ["uvicorn", "target_services.auth_service:app", "--host", "0.0.0.0", "--port", "8084"]
+    ports:
+      - "8084:8084"
+    environment:
+      - PORT=8084
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: traceheal-notification
+    command: ["uvicorn", "target_services.notification_service:app", "--host", "0.0.0.0", "--port", "8085"]
+    ports:
+      - "8085:8085"
+    environment:
+      - PORT=8085
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - traceheal-net
+    depends_on:
+      - traceheal-core
+    restart: unless-stopped
+
+volumes:
+  traceheal-data:
+    driver: local
+  traceheal-patches:
+    driver: local
+
+networks:
+  traceheal-net:
+    driver: bridge

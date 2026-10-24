@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TraceHeal — Premium Idea Submission</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #070A13;
+    color: #E2E8F0;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    line-height: 1.5;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    padding: 16mm 18mm 14mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.09) 0%, rgba(7, 10, 19, 1) 75%);
+  }
+
+  /* Ambient Grid Overlay */
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 18mm 18mm;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  /* Header & Footer */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    margin-bottom: 5mm;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: #F8FAFC;
+  }
+
+  .brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00F0FF;
+    box-shadow: 0 0 10px #00F0FF;
+  }
+
+  .header-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3.5px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  .page-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #00F0FF;
+    font-weight: 700;
+  }
+
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 4mm;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    font-size: 9.5px;
+    color: #64748B;
+    margin-top: 5mm;
+  }
+
+  /* Typography */
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #00F0FF;
+    background: rgba(0, 240, 255, 0.08);
+    padding: 3.5px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 240, 255, 0.28);
+    margin-bottom: 6px;
+    width: fit-content;
+  }
+
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    font-size: 12.5px;
+    color: #94A3B8;
+    margin-bottom: 5mm;
+    line-height: 1.45;
+  }
+
+  /* Cards & Layouts */
+  .card {
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 9px;
+    padding: 14px 16px;
+    position: relative;
+  }
+
+  .card-glow-cyan {
+    border-color: rgba(0, 240, 255, 0.35);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.07);
+  }
+
+  .card-glow-red {
+    border-color: rgba(239, 68, 68, 0.38);
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.09);
+  }
+
+  .card-glow-green {
+    border-color: rgba(16, 185, 129, 0.38);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.09);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 11px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  /* Diagrams */
+  .diagram-container {
+    background: rgba(10, 16, 32, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  /* Badges */
+  .badge-danger {
+    background: rgba(239, 68, 68, 0.16);
+    color: #F87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .badge-success {
+    background: rgba(16, 185, 129, 0.16);
+    color: #34D399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .badge-cyan {
+    background: rgba(0, 240, 255, 0.14);
+    color: #00F0FF;
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .badge-amber {
+    background: rgba(245, 158, 11, 0.16);
+    color: #FBBF24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  /* Tables */
+  table.tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+  }
+
+  table.tech-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #94A3B8;
+    text-transform: uppercase;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  table.tech-table td {
+    padding: 7.5px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #CBD5E1;
+  }
+
+  table.tech-table tr:last-child td {
+    border-bottom: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================================================================
+     PAGE 1: COVER
+==================================================================== -->
+<div class="page" style="background: radial-gradient(circle at 50% 32%, rgba(0, 240, 255, 0.15) 0%, rgba(7, 10, 19, 1) 75%);">
+  <div class="page-content">
+    
+    <!-- Top Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 3mm;">
+      <div style="display: flex; align-items: center; gap: 9px;">
+        <div style="width: 10px; height: 10px; background: #00F0FF; border-radius: 2px; box-shadow: 0 0 14px #00F0FF;"></div>
+        <span class="mono" style="font-size: 12px; font-weight: 700; letter-spacing: 0.22em; color: #94A3B8;">HACKYARD BUILD 2026</span>
+      </div>
+      <div class="header-tag">ROUND 1 IDEA SUBMISSION</div>
+    </div>
+
+    <!-- Center Hero -->
+    <div style="text-align: center; margin: auto 0;">
+      <div class="section-badge" style="margin: 0 auto 16px auto;">AUTONOMOUS CLOUD RELIABILITY SYSTEM</div>
+      
+      <h1 style="font-size: 56px; font-weight: 800; letter-spacing: -0.04em; color: #FFFFFF; line-height: 1.05; margin-bottom: 14px;">
+        TRACE<span style="color: #00F0FF; text-shadow: 0 0 30px rgba(0, 240, 255, 0.55);">HEAL</span>
+      </h1>
+      
+      <p style="font-size: 16px; font-weight: 500; color: #CBD5E1; max-width: 82%; margin: 0 auto 22px auto; line-height: 1.5;">
+        Autonomous Incident Investigation & Shadow-Verified Remediation for Microservices
+      </p>
+
+      <div style="display: inline-flex; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(0, 240, 255, 0.35); border-radius: 999px; padding: 9px 26px; margin-bottom: 35px;">
+        <span style="font-size: 13.5px; font-weight: 700; color: #00F0FF; letter-spacing: 0.05em;">Trace it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 13.5px; font-weight: 700; color: #38BDF8; letter-spacing: 0.05em;">Reproduce it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 13.5px; font-weight: 700; color: #818CF8; letter-spacing: 0.05em;">Verify it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 13.5px; font-weight: 700; color: #34D399; letter-spacing: 0.05em;">Heal it.</span>
+      </div>
+
+      <!-- Hero Concept Diagram -->
+      <div style="margin: 0 auto; max-width: 98%;">
+        <svg viewBox="0 0 640 180" style="width: 100%; height: auto;">
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <!-- Connecting Flow -->
+          <path d="M 100 90 L 175 90 M 235 90 L 310 90 M 375 90 L 450 90 M 510 90 L 575 90" stroke="rgba(0, 240, 255, 0.35)" stroke-width="2.5" stroke-dasharray="5 5" />
+
+          <!-- Node 1: Alert Storm -->
+          <g transform="translate(20, 42)">
+            <rect width="90" height="96" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.5" />
+            <circle cx="45" cy="35" r="16" fill="rgba(239, 68, 68, 0.2)" stroke="#EF4444" stroke-width="1.8" />
+            <text x="45" y="40" text-anchor="middle" font-size="10.5" font-family="'JetBrains Mono'" fill="#EF4444" font-weight="800">ALERT</text>
+            <text x="45" y="68" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#94A3B8" font-weight="700">Microservices</text>
+            <text x="45" y="82" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#64748B">Incident Storm</text>
+          </g>
+
+          <!-- Node 2: OpenTelemetry Traces -->
+          <g transform="translate(155, 42)">
+            <rect width="90" height="96" rx="8" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <circle cx="45" cy="35" r="16" fill="rgba(2, 132, 199, 0.2)" stroke="#38BDF8" stroke-width="1.8" />
+            <text x="45" y="40" text-anchor="middle" font-size="11" font-family="'JetBrains Mono'" fill="#38BDF8" font-weight="800">OTel</text>
+            <text x="45" y="68" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#94A3B8" font-weight="700">Distributed</text>
+            <text x="45" y="82" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#64748B">Span DAG Tree</text>
+          </g>
+
+          <!-- Node 3: AI Agent Swarm -->
+          <g transform="translate(290, 36)">
+            <rect width="105" height="108" rx="10" fill="#0B132B" stroke="#00F0FF" stroke-width="2.2" filter="url(#glow)" />
+            <circle cx="52.5" cy="38" r="18" fill="rgba(0, 240, 255, 0.2)" stroke="#00F0FF" stroke-width="1.8" />
+            <text x="52.5" y="43" text-anchor="middle" font-size="12" font-family="'JetBrains Mono'" fill="#00F0FF" font-weight="800">AGENT</text>
+            <text x="52.5" y="74" text-anchor="middle" font-size="10.5" font-family="'Plus Jakarta Sans'" fill="#FFFFFF" font-weight="800">Causal Engine</text>
+            <text x="52.5" y="88" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#38BDF8">Hypothesis Gen</text>
+          </g>
+
+          <!-- Node 4: Sandbox Replay -->
+          <g transform="translate(430, 42)">
+            <rect width="90" height="96" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.5" />
+            <circle cx="45" cy="35" r="16" fill="rgba(139, 92, 246, 0.2)" stroke="#A78BFA" stroke-width="1.8" />
+            <text x="45" y="40" text-anchor="middle" font-size="11" font-family="'JetBrains Mono'" fill="#A78BFA" font-weight="800">TEST</text>
+            <text x="45" y="68" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#94A3B8" font-weight="700">Shadow</text>
+            <text x="45" y="82" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#64748B">Docker Sandbox</text>
+          </g>
+
+          <!-- Node 5: Verified Fix -->
+          <g transform="translate(545, 42)">
+            <rect width="75" height="96" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1.5" />
+            <circle cx="37.5" cy="35" r="16" fill="rgba(16, 185, 129, 0.2)" stroke="#34D399" stroke-width="1.8" />
+            <text x="37.5" y="40" text-anchor="middle" font-size="11" font-family="'JetBrains Mono'" fill="#34D399" font-weight="800">PR</text>
+            <text x="37.5" y="68" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="800">Verified</text>
+            <text x="37.5" y="82" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#64748B">Safe Fix</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bottom Meta Card -->
+    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 9px; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 9.5px; color: #64748B; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;">Track Alignment</div>
+        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0;">AI Agents • Developer Tools • Cloud SRE</div>
+      </div>
+      <div>
+        <div style="font-size: 9.5px; color: #64748B; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;">Physical Finale</div>
+        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0;">IIT Guwahati (24–25 Oct 2026)</div>
+      </div>
+      <div>
+        <div style="font-size: 9.5px; color: #64748B; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;">Team Code</div>
+        <div class="mono" style="font-size: 12px; font-weight: 700; color: #00F0FF;">HYB-BUILD2026</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 2: THE PROBLEM
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">01 • THE PROBLEM</div>
+        <div class="page-counter">02 / 12</div>
+      </div>
+
+      <div class="section-badge">CRITICAL ENTERPRISE PAIN POINT</div>
+      <h2 class="page-title">When Production Breaks, Engineers Don't Get One Alert.</h2>
+      <p class="page-subtitle">A single downstream failure triggers a cascading alert storm across distributed architectures, paralyzing on-call engineering teams.</p>
+
+      <!-- Visual: Microservice Call Chain & Cascade -->
+      <div class="diagram-container">
+        <svg viewBox="0 0 620 160" style="width: 100%; height: auto;">
+          <!-- Service Chain -->
+          <g transform="translate(10, 15)">
+            <rect width="90" height="48" rx="6" fill="#1E293B" stroke="#475569" stroke-width="1.4" />
+            <text x="45" y="24" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#94A3B8" font-weight="700">Client Web</text>
+            <text x="45" y="38" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#64748B">Traffic Ingress</text>
+          </g>
+          <path d="M 100 39 L 125 39" stroke="#00F0FF" stroke-width="2" />
+
+          <g transform="translate(125, 15)">
+            <rect width="95" height="48" rx="6" fill="#1E293B" stroke="#EF4444" stroke-width="1.8" />
+            <text x="47.5" y="24" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#F87171" font-weight="700">API Gateway</text>
+            <text x="47.5" y="38" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#EF4444">504 Gateway T/O</text>
+          </g>
+          <path d="M 220 39 L 245 39" stroke="#EF4444" stroke-width="2" />
+
+          <g transform="translate(245, 15)">
+            <rect width="95" height="48" rx="6" fill="#1E293B" stroke="#EF4444" stroke-width="1.8" />
+            <text x="47.5" y="24" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#F87171" font-weight="700">Order Service</text>
+            <text x="47.5" y="38" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#EF4444">500 Internal Err</text>
+          </g>
+          <path d="M 340 39 L 365 39" stroke="#EF4444" stroke-width="2" />
+
+          <g transform="translate(365, 15)">
+            <rect width="95" height="48" rx="6" fill="#1E293B" stroke="#EF4444" stroke-width="1.8" />
+            <text x="47.5" y="24" text-anchor="middle" font-size="10" font-family="'Plus Jakarta Sans'" fill="#F87171" font-weight="700">Payment API</text>
+            <text x="47.5" y="38" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#EF4444">Retry Storm</text>
+          </g>
+          <path d="M 460 39 L 485 39" stroke="#EF4444" stroke-width="2" />
+
+          <g transform="translate(485, 10)">
+            <rect width="125" height="58" rx="6" fill="#450A0A" stroke="#EF4444" stroke-width="2.2" />
+            <text x="62.5" y="25" text-anchor="middle" font-size="10.5" font-family="'Plus Jakarta Sans'" fill="#FCA5A5" font-weight="800">Postgres DB</text>
+            <text x="62.5" y="39" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#F87171">ROOT CAUSE:</text>
+            <text x="62.5" y="50" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#FCA5A5">Pool Exhaustion</text>
+          </g>
+
+          <!-- Downward Alert Blast -->
+          <g transform="translate(20, 85)">
+            <rect width="580" height="42" rx="5" fill="rgba(239, 68, 68, 0.12)" stroke="rgba(239, 68, 68, 0.35)" stroke-width="1.2" />
+            <text x="290" y="21" text-anchor="middle" font-size="10.5" font-family="'JetBrains Mono'" fill="#F87171" font-weight="700">
+              ALERT BLAST RADIUS: 48 CRITICAL ALERTS FIRED SIMULTANEOUSLY ACROSS 4 SERVICES
+            </text>
+            <text x="290" y="34" text-anchor="middle" font-size="9" font-family="'Plus Jakarta Sans'" fill="#CBD5E1">
+              Engineers waste 45+ minutes determining: "Which alert is the symptom, and which is the root cause?"
+            </text>
+          </g>
+
+          <!-- Propagation Lines -->
+          <path d="M 547 68 L 547 85" stroke="#EF4444" stroke-width="2" stroke-dasharray="3 3" />
+        </svg>
+      </div>
+
+      <!-- 3 Core Problem Cards -->
+      <div class="grid-3" style="margin-bottom: 12px;">
+        <div class="card card-glow-red">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #FFFFFF;">1. Cascading Fallouts</span>
+            <span class="badge-danger">Alert Storm</span>
+          </div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            Modern architectures are tightly coupled. When one microservice throttles, upstream callers queue requests, trigger retry storms, and throw secondary 504 timeouts. The engineer sees 50 screaming monitors.
+          </p>
+        </div>
+
+        <div class="card card-glow-red">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #FFFFFF;">2. Symptom ≠ Cause</span>
+            <span class="badge-danger">Noise & Latency</span>
+          </div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            The service reporting the alert is almost never where the problem originated. SREs waste critical minutes inspecting API gateway logs when the true bug is a connection leak four network hops deep.
+          </p>
+        </div>
+
+        <div class="card card-glow-red">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12.5px; font-weight: 700; color: #FFFFFF;">3. The MTTR Clock</span>
+            <span class="badge-danger">High Downtime Cost</span>
+          </div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            During an active outage, downtime costs thousands of dollars per minute. Manual log grepping and trace correlation is slow, stressful, and leads to extreme team fatigue and repeated regressions.
+          </p>
+        </div>
+      </div>
+
+      <!-- SRE Time Breakdown Card -->
+      <div class="card" style="padding: 14px 18px; border-left: 4px solid #EF4444; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: #F8FAFC;">The SRE Incident Breakdown Today:</div>
+            <p style="font-size: 10.5px; color: #94A3B8; margin-top: 2px;">
+              Out of an average 45-minute incident, 40+ minutes are spent locating the root cause. Applying the fix takes only 3 minutes.
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <span class="mono" style="font-size: 18px; font-weight: 800; color: #EF4444;">88% OF MTTR</span>
+            <div style="font-size: 9px; color: #64748B;">Is pure manual investigation toil</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study Card to fill out vertical space -->
+      <div class="card" style="padding: 12px 16px; background: rgba(30, 41, 59, 0.4);">
+        <div style="font-size: 11px; font-weight: 700; color: #38BDF8; margin-bottom: 3px;">REAL-WORLD FAILURE ANATOMY: THE POOL EXHAUSTION DISASTER</div>
+        <p style="font-size: 9.5px; color: #94A3B8; line-height: 1.4;">
+          When an unhandled client disconnect fails to release a database connection, pool saturation occurs. The database appears healthy (low CPU), but incoming worker threads hang indefinitely, cascading 504 errors up to user browsers. Without distributed trace correlation, engineers mistakenly reboot the gateway, exacerbating cluster instability.
+        </p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 01 • SYSTEMIC OPERATIONAL DEFICITS</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 3: THE GAP
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">02 • THE INDUSTRY GAP</div>
+        <div class="page-counter">03 / 12</div>
+      </div>
+
+      <div class="section-badge">WHY AIOPS CURRENTLY FALLS SHORT</div>
+      <h2 class="page-title">The Problem With "AI-Powered" Incident Response</h2>
+      <p class="page-subtitle">Diagnosis is not the same as verified diagnosis. Treating probabilistic text as ground truth endangers mission-critical systems.</p>
+
+      <!-- Side-by-Side Comparison -->
+      <div class="grid-2" style="margin-bottom: 12px;">
+        
+        <!-- Left: Traditional AI -->
+        <div class="card card-glow-red" style="padding: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(239, 68, 68, 0.25); padding-bottom: 6px;">
+            <span style="font-size: 13px; font-weight: 800; color: #F87171;">TRADITIONAL AIOPS PIPELINE</span>
+            <span class="badge-danger">Unverified / High Risk</span>
+          </div>
+          
+          <div style="font-size: 10.5px; color: #CBD5E1; font-family: 'JetBrains Mono'; line-height: 1.6; margin-bottom: 10px;">
+            Alert Storm Triggered<br>
+            &nbsp;&nbsp;↓<br>
+            Logs & Metrics Fed to LLM<br>
+            &nbsp;&nbsp;↓<br>
+            <span style="color: #F87171; font-weight: 700;">AI Summarizes Text ("Looks like DB deadlock")</span><br>
+            &nbsp;&nbsp;↓<br>
+            Unverified Advice ("Restart the database")<br>
+            &nbsp;&nbsp;↓<br>
+            <span style="color: #EF4444; font-weight: 700;">Human takes risk in production ➔ Outage worsens</span>
+          </div>
+
+          <div style="background: rgba(239, 68, 68, 0.1); border-radius: 6px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: #FCA5A5; margin-bottom: 3px;">THE FATAL FLAW: HALLUCINATED REMEDIATION</div>
+            <p style="font-size: 9.5px; color: #94A3B8; line-height: 1.45;">
+              LLMs generate plausible explanations without testing them. Incumbents (Datadog Bits AI, PagerDuty Advance) deliberately remain read-only chatbots because executing unverified suggestions introduces massive enterprise liability.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: TraceHeal Closed Loop -->
+        <div class="card card-glow-green" style="padding: 15px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(16, 185, 129, 0.25); padding-bottom: 6px;">
+            <span style="font-size: 13px; font-weight: 800; color: #34D399;">TRACEHEAL VERIFICATION PIPELINE</span>
+            <span class="badge-success">Empirical / Closed-Loop</span>
+          </div>
+
+          <div style="font-size: 10.5px; color: #CBD5E1; font-family: 'JetBrains Mono'; line-height: 1.6; margin-bottom: 10px;">
+            Alert + OpenTelemetry Span DAG<br>
+            &nbsp;&nbsp;↓<br>
+            Causal Hypothesis Formulation<br>
+            &nbsp;&nbsp;↓<br>
+            <span style="color: #00F0FF; font-weight: 700;">Ephemeral Docker Sandbox Replay</span><br>
+            &nbsp;&nbsp;↓<br>
+            <span style="color: #34D399; font-weight: 700;">Empirical Verification (Error Reproduced)</span><br>
+            &nbsp;&nbsp;↓<br>
+            Safe Remediation Tested in Isolation<br>
+            &nbsp;&nbsp;↓<br>
+            <span style="color: #34D399; font-weight: 700;">Human-Gated GitHub PR with Verified Proof</span>
+          </div>
+
+          <div style="background: rgba(16, 185, 129, 0.1); border-radius: 6px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: #6EE7B7; margin-bottom: 3px;">THE TRACEHEAL ADVANTAGE: PROOF BEFORE TOUCH</div>
+            <p style="font-size: 9.5px; color: #94A3B8; line-height: 1.45;">
+              An AI diagnosis is treated as an unconfirmed hypothesis until it is reproduced in an isolated container. Compilers and test runners act as the ultimate ground-truth arbiters before human handoff.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Incumbent Landscape Summary Table -->
+      <div class="card" style="padding: 12px 16px; margin-bottom: 10px;">
+        <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px;">ENTERPRISE OBSERVABILITY & AIOPS MATRIX:</div>
+        <div class="grid-4" style="gap: 8px;">
+          <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #38BDF8; font-size: 10px;">Datadog Bits AI</div>
+            <div style="font-size: 8.5px; color: #94A3B8; margin-top: 2px;">Read-only alert summarizer. Zero execution or sandbox verification.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #38BDF8; font-size: 10px;">Dynatrace Davis</div>
+            <div style="font-size: 8.5px; color: #94A3B8; margin-top: 2px;">Causal topological graphs, but stops at diagnosis. No automated fix proof.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #38BDF8; font-size: 10px;">PagerDuty Advance</div>
+            <div style="font-size: 8.5px; color: #94A3B8; margin-top: 2px;">Drafts postmortems and Slack summaries. Does not inspect code or traces.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #00F0FF; font-size: 10px;">TraceHeal</div>
+            <div style="font-size: 8.5px; color: #34D399; margin-top: 2px;">End-to-end: Causal traces ➔ Sandbox replay ➔ Verified PR delivery.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Tenet Banner -->
+    <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(0, 240, 255, 0.35); border-radius: 8px; padding: 12px 18px; text-align: center;">
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #00F0FF;">
+        DIAGNOSIS ≠ VERIFIED DIAGNOSIS
+      </span>
+      <p style="font-size: 10.5px; color: #CBD5E1; margin-top: 3px;">
+        "AI can suggest a diagnosis. TraceHeal tests it before trusting it."
+      </p>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 02 • INDUSTRY DEFICIENCIES & THE VERIFICATION GAP</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 4: INTRODUCE TRACEHEAL
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">03 • OUR SOLUTION</div>
+        <div class="page-counter">04 / 12</div>
+      </div>
+
+      <div class="section-badge">INTRODUCING TRACEHEAL</div>
+      <h2 class="page-title">Meet TraceHeal: Autonomous SRE Grounded in Evidence</h2>
+      <p class="page-subtitle">TraceHeal bridges the gap between distributed runtime tracing and isolated code execution to verify failures before remediation.</p>
+
+      <!-- Central Conceptual Visual -->
+      <div class="diagram-container" style="padding: 16px;">
+        <svg viewBox="0 0 620 160" style="width: 100%; height: auto;">
+          <!-- Center Hub -->
+          <g transform="translate(235, 10)">
+            <rect width="150" height="42" rx="8" fill="#0B132B" stroke="#00F0FF" stroke-width="2" />
+            <text x="75" y="22" text-anchor="middle" font-size="12" font-family="'Plus Jakarta Sans'" fill="#FFFFFF" font-weight="800">TRACEHEAL</text>
+            <text x="75" y="34" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#00F0FF">Command Engine</text>
+          </g>
+
+          <!-- Left Branch: Understand -->
+          <path d="M 235 31 L 140 31 L 140 60" stroke="#38BDF8" stroke-width="2" />
+          <g transform="translate(65, 60)">
+            <rect width="150" height="48" rx="7" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <text x="75" y="21" text-anchor="middle" font-size="11" font-family="'Plus Jakarta Sans'" fill="#38BDF8" font-weight="800">1. UNDERSTAND</text>
+            <text x="75" y="35" text-anchor="middle" font-size="9" font-family="'Plus Jakarta Sans'" fill="#94A3B8">OTel Traces • Logs • Metrics</text>
+          </g>
+
+          <!-- Right Branch: Verify -->
+          <path d="M 385 31 L 480 31 L 480 60" stroke="#8B5CF6" stroke-width="2" />
+          <g transform="translate(405, 60)">
+            <rect width="150" height="48" rx="7" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.5" />
+            <text x="75" y="21" text-anchor="middle" font-size="11" font-family="'Plus Jakarta Sans'" fill="#A78BFA" font-weight="800">2. VERIFY</text>
+            <text x="75" y="35" text-anchor="middle" font-size="9" font-family="'Plus Jakarta Sans'" fill="#94A3B8">Docker Sandbox • Replay • Proof</text>
+          </g>
+
+          <!-- Convergence to Safe Action -->
+          <path d="M 140 108 L 140 128 L 235 128" stroke="#38BDF8" stroke-width="2" />
+          <path d="M 480 108 L 480 128 L 385 128" stroke="#8B5CF6" stroke-width="2" />
+
+          <g transform="translate(235, 110)">
+            <rect width="150" height="38" rx="7" fill="#064E3B" stroke="#10B981" stroke-width="1.8" />
+            <text x="75" y="19" text-anchor="middle" font-size="11" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="800">3. SAFE ACTION</text>
+            <text x="75" y="31" text-anchor="middle" font-size="8.5" font-family="'Plus Jakarta Sans'" fill="#D1FAE5">Policy-Gated Pull Request</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 3 Core Tenet Cards -->
+      <div class="grid-3" style="margin-bottom: 12px;">
+        <div class="card card-glow-cyan">
+          <div class="mono" style="font-size: 10px; color: #00F0FF; font-weight: 700; margin-bottom: 5px;">TELEMETRY NATIVE</div>
+          <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">OpenTelemetry Standard</div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            Zero vendor lock-in. TraceHeal natively consumes open-standard OTel spans, trace context propagation, and metric events to reconstruct accurate causal execution DAGs across microservices.
+          </p>
+        </div>
+
+        <div class="card card-glow-cyan">
+          <div class="mono" style="font-size: 10px; color: #A78BFA; font-weight: 700; margin-bottom: 5px;">ISOLATED REPLAY</div>
+          <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">The Shadow Sandbox</div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            Spawns lightweight, ephemeral containers to reproduce the failing condition with synthetic inputs. Confirms hypotheses with concrete process exit codes and error logs.
+          </p>
+        </div>
+
+        <div class="card card-glow-cyan">
+          <div class="mono" style="font-size: 10px; color: #34D399; font-weight: 700; margin-bottom: 5px;">HUMAN-IN-THE-LOOP</div>
+          <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">Policy-Gated Safety</div>
+          <p style="font-size: 10.5px; color: #94A3B8; line-height: 1.45;">
+            Autonomous in the sandbox, strictly guarded in production. All proposed code or configuration changes are delivered as verified Pull Requests with execution proof.
+          </p>
+        </div>
+      </div>
+
+      <!-- Core Capabilities Grid -->
+      <div class="card" style="padding: 12px 16px;">
+        <div style="font-size: 11px; font-weight: 700; color: #00F0FF; margin-bottom: 6px;">FIVE CORE PLATFORM CAPABILITIES:</div>
+        <div class="grid-4" style="gap: 8px;">
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div style="font-weight: 700; color: #E2E8F0; font-size: 9.5px;">Trace Intelligence</div>
+            <div style="font-size: 8px; color: #94A3B8;">Multi-hop parent-child call graph analysis.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div style="font-weight: 700; color: #E2E8F0; font-size: 9.5px;">Shadow Sandboxing</div>
+            <div style="font-size: 8px; color: #94A3B8;">On-demand containerized test runtimes.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div style="font-weight: 700; color: #E2E8F0; font-size: 9.5px;">Regression Testing</div>
+            <div style="font-size: 8px; color: #94A3B8;">Pre-merge validation against test suites.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div style="font-weight: 700; color: #E2E8F0; font-size: 9.5px;">Auditable Artifacts</div>
+            <div style="font-size: 8px; color: #94A3B8;">Detailed GitHub PRs with log evidence.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner -->
+    <div style="text-align: center; background: rgba(0, 240, 255, 0.06); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: 8px; padding: 12px;">
+      <span style="font-size: 12px; font-weight: 700; color: #E2E8F0;">
+        "Don't just explain the incident. Verify the explanation."
+      </span>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 03 • CORE ARCHITECTURAL PILLARS</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 5: HOW IT WORKS
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">04 • WORKFLOW LIFECYCLE</div>
+        <div class="page-counter">05 / 12</div>
+      </div>
+
+      <div class="section-badge">END-TO-END EXECUTION</div>
+      <h2 class="page-title">From Incident to Verified Recovery</h2>
+      <p class="page-subtitle">An 8-stage closed-loop lifecycle that takes an unhandled production alert through rigorous empirical validation.</p>
+
+      <!-- 8 Step Sequential Workflow Cards (2 columns of 4) -->
+      <div class="grid-2" style="gap: 10px; margin-bottom: 12px;">
+        
+        <!-- Step 01 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #00F0FF;">01</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">DETECT</span>
+            <span class="badge-cyan" style="margin-left: auto;">Anomaly Ingestion</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Ingests streaming metric anomalies and alerts exceeding dynamic error thresholds.</p>
+        </div>
+
+        <!-- Step 02 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #00F0FF;">02</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">CORRELATE</span>
+            <span class="badge-cyan" style="margin-left: auto;">Alert Deduplication</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Groups cascading multi-service alerts across dependency trees into a single incident.</p>
+        </div>
+
+        <!-- Step 03 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #00F0FF;">03</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">TRACE</span>
+            <span class="badge-cyan" style="margin-left: auto;">OTel Span Traversal</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Traverses distributed trace DAGs to pinpoint the earliest failing span boundary.</p>
+        </div>
+
+        <!-- Step 04 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #00F0FF;">04</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">HYPOTHESIZE</span>
+            <span class="badge-amber" style="margin-left: auto;">Causal Reasoning</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Cross-references span metadata with recent Git commits to draft causal candidates.</p>
+        </div>
+
+        <!-- Step 05 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #A78BFA;">05</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">REPRODUCE</span>
+            <span class="badge-amber" style="margin-left: auto;">Shadow Sandbox</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Spins up an ephemeral Docker container and replays a synthetic failing workload.</p>
+        </div>
+
+        <!-- Step 06 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #A78BFA;">06</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">VERIFY</span>
+            <span class="badge-success" style="margin-left: auto;">Empirical Check</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Evaluates if the reproduction matches the failure signature; backtracks if disproven.</p>
+        </div>
+
+        <!-- Step 07 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #34D399;">07</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">REMEDIATE</span>
+            <span class="badge-success" style="margin-left: auto;">Patch Synthesis</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Synthesizes a policy-controlled configuration update or targeted code patch.</p>
+        </div>
+
+        <!-- Step 08 -->
+        <div class="card" style="padding: 12px 14px;">
+          <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+            <span class="mono" style="font-size: 13px; font-weight: 800; color: #34D399;">08</span>
+            <span style="font-size: 12px; font-weight: 700; color: #FFFFFF;">VALIDATE</span>
+            <span class="badge-success" style="margin-left: auto;">Zero-Regression Gate</span>
+          </div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.4;">Re-runs tests inside the sandbox to prove resolution before human Pull Request creation.</p>
+        </div>
+
+      </div>
+
+      <!-- Execution Guarantees Card -->
+      <div class="card" style="padding: 12px 16px; background: rgba(15, 23, 42, 0.6); margin-bottom: 10px;">
+        <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin-bottom: 3px;">THE DETERMINISTIC GUARANTEE:</div>
+        <p style="font-size: 9.5px; color: #94A3B8; line-height: 1.4;">
+          Unlike linear scripts that crash when steps fail, TraceHeal implements stateful backtracking: if Step 06 (Verify) fails to reproduce the bug in the sandbox, the engine backtracks to Step 04 (Hypothesize) to test the next candidate in the causal graph.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom Flow Chart Bar -->
+    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+      <span class="mono" style="font-size: 10px; color: #94A3B8;">
+        DETECT ➔ CORRELATE ➔ TRACE ➔ HYPOTHESIZE ➔ REPRODUCE ➔ VERIFY ➔ REMEDIATE ➔ VALIDATE
+      </span>
+      <span class="badge-success">DETERMINISTIC CONVERGENCE</span>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 04 • SYSTEM EXECUTION PIPELINE</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 6: AGENTIC ARCHITECTURE
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">05 • AGENTIC SYSTEM DESIGN</div>
+        <div class="page-counter">06 / 12</div>
+      </div>
+
+      <div class="section-badge">MULTI-AGENT COORDINATION</div>
+      <h2 class="page-title">A Team of Specialized AI Agents</h2>
+      <p class="page-subtitle">A monolithic LLM cannot handle incident response. TraceHeal coordinates specialized agents over a shared blackboard state graph.</p>
+
+      <!-- Architecture Diagram: Multi-Agent State Machine -->
+      <div class="diagram-container" style="padding: 14px;">
+        <svg viewBox="0 0 620 160" style="width: 100%; height: auto;">
+          <!-- Blackboard State Box -->
+          <rect x="160" y="5" width="300" height="30" rx="6" fill="#0B132B" stroke="#00F0FF" stroke-width="1.8" />
+          <text x="310" y="23" text-anchor="middle" font-size="10.5" font-family="'JetBrains Mono'" fill="#00F0FF" font-weight="700">SHARED INCIDENT BLACKBOARD (LangGraph State)</text>
+
+          <!-- Connectors -->
+          <path d="M 310 35 L 310 52 M 70 52 L 550 52" stroke="rgba(0, 240, 255, 0.4)" stroke-width="1.6" />
+
+          <!-- Tier 1: Analysis -->
+          <g transform="translate(15, 60)">
+            <rect width="130" height="40" rx="6" fill="#0F172A" stroke="#334155" stroke-width="1.3" />
+            <text x="65" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#FFFFFF" font-weight="700">Triage Agent</text>
+            <text x="65" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Alert Deduplication</text>
+          </g>
+
+          <g transform="translate(165, 60)">
+            <rect width="140" height="40" rx="6" fill="#0F172A" stroke="#0284C7" stroke-width="1.3" />
+            <text x="70" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#38BDF8" font-weight="700">Trace Intelligence</text>
+            <text x="70" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Span DAG Traversal</text>
+          </g>
+
+          <g transform="translate(325, 60)">
+            <rect width="135" height="40" rx="6" fill="#0F172A" stroke="#0284C7" stroke-width="1.3" />
+            <text x="67.5" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#38BDF8" font-weight="700">Root Cause Agent</text>
+            <text x="67.5" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Causal Hypothesis</text>
+          </g>
+
+          <g transform="translate(480, 60)">
+            <rect width="130" height="40" rx="6" fill="#0F172A" stroke="#A78BFA" stroke-width="1.3" />
+            <text x="65" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#A78BFA" font-weight="700">Sandbox Agent</text>
+            <text x="65" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Ephemeral Replay</text>
+          </g>
+
+          <!-- Tier 2: Action & Delivery -->
+          <g transform="translate(85, 110)">
+            <rect width="140" height="40" rx="6" fill="#0F172A" stroke="#34D399" stroke-width="1.3" />
+            <text x="70" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="700">Remediation Agent</text>
+            <text x="70" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Synthesizes Patch</text>
+          </g>
+
+          <g transform="translate(245, 110)">
+            <rect width="140" height="40" rx="6" fill="#0F172A" stroke="#34D399" stroke-width="1.3" />
+            <text x="70" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="700">Validation Agent</text>
+            <text x="70" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Zero-Regression Test</text>
+          </g>
+
+          <g transform="translate(405, 110)">
+            <rect width="140" height="40" rx="6" fill="#0F172A" stroke="#38BDF8" stroke-width="1.3" />
+            <text x="70" y="19" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#38BDF8" font-weight="700">Postmortem Agent</text>
+            <text x="70" y="31" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">GitHub PR & Audit Log</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Agent Detail Cards -->
+      <div class="grid-3" style="gap: 10px; margin-bottom: 12px;">
+        <div class="card">
+          <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin-bottom: 3px;">Trace Intelligence Agent</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Traverses call trees across distributed services. Identifies anomalous latency drops and isolates the initial failing span boundary.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 11px; font-weight: 700; color: #A78BFA; margin-bottom: 3px;">Sandbox Reproduction Agent</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Synthesizes a minimal reproduction harness via Docker SDK. Replays exact error conditions in isolation to obtain empirical confirmation.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 11px; font-weight: 700; color: #34D399; margin-bottom: 3px;">Validation & PR Agent</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Applies candidate patches in the sandbox, runs integration suites, and opens a fully documented GitHub Pull Request with execution proof.
+          </p>
+        </div>
+      </div>
+
+      <!-- Shared State Details to fill vertical space -->
+      <div class="card" style="padding: 12px 16px; margin-bottom: 10px;">
+        <div style="font-size: 11px; font-weight: 700; color: #00F0FF; margin-bottom: 4px;">SHARED BLACKBOARD STATE SCHEMA:</div>
+        <div class="grid-3" style="gap: 6px;">
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div class="mono" style="font-size: 8px; color: #38BDF8;">telemetry_graph</div>
+            <div style="font-size: 8px; color: #94A3B8;">Trace IDs, spans, error tags, and topological relations.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div class="mono" style="font-size: 8px; color: #A78BFA;">sandbox_state</div>
+            <div style="font-size: 8px; color: #94A3B8;">Container ID, ports, stdout replay logs, and error codes.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 7px; border-radius: 5px;">
+            <div class="mono" style="font-size: 8px; color: #34D399;">remediation_diff</div>
+            <div style="font-size: 8px; color: #94A3B8;">Git commit patch, test run results, and PR URL.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Genuinely Agentic -->
+    <div style="background: rgba(15, 23, 42, 0.7); border-left: 4px solid #00F0FF; padding: 12px 16px; border-radius: 0 8px 8px 0;">
+      <div style="font-size: 11px; font-weight: 700; color: #00F0FF;">WHY THIS IS GENUINELY AGENTIC (NOT A SINGLE PROMPT):</div>
+      <p style="font-size: 9.5px; color: #CBD5E1; margin-top: 3px; line-height: 1.45;">
+        TraceHeal executes an iterative perception-action feedback loop: agents take environmental actions (spinning up containers, running tests), perceive real runtime feedback (exit codes, logs), and backtrack when hypotheses are refuted.
+      </p>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 05 • MULTI-AGENT STATE ORCHESTRATION</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 7: CORE INNOVATION
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">06 • CORE INNOVATION</div>
+        <div class="page-counter">07 / 12</div>
+      </div>
+
+      <div class="section-badge">OUR UNFAIR ADVANTAGE</div>
+      <h2 class="page-title">The "Proof Before Fix" Layer</h2>
+      <p class="page-subtitle">TraceHeal never assumes an AI diagnosis is correct. Every hypothesis must prove itself inside an isolated execution sandbox.</p>
+
+      <!-- Visual Transition: Hypothesis -> Verification -> Proof -->
+      <div class="card card-glow-cyan" style="padding: 16px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="mono" style="font-size: 12px; font-weight: 700; color: #00F0FF;">EMPIRICAL FALSIFICATION PIPELINE</span>
+          <span class="badge-cyan">ZERO-HALLUCINATION GATE</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+          
+          <!-- Step 1: AI Thinks -->
+          <div style="flex: 1; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 7px; padding: 12px; text-align: center;">
+            <div style="font-size: 9.5px; font-weight: 700; color: #FBBF24; margin-bottom: 4px;">1. AI HYPOTHESIS</div>
+            <div class="mono" style="font-size: 10px; color: #E2E8F0; line-height: 1.4;">
+              "Database connection pool exhausted due to unhandled timeout."
+            </div>
+          </div>
+
+          <span style="font-size: 18px; color: #64748B;">➔</span>
+
+          <!-- Step 2: The Question Mark -->
+          <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); border: 2px solid #F59E0B; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 22px; font-weight: 800; color: #FBBF24;">?</span>
+          </div>
+
+          <span style="font-size: 18px; color: #64748B;">➔</span>
+
+          <!-- Step 3: Sandbox Test -->
+          <div style="flex: 1.25; background: rgba(15, 23, 42, 0.85); border: 1px solid #8B5CF6; border-radius: 7px; padding: 12px; text-align: center;">
+            <div style="font-size: 9.5px; font-weight: 700; color: #A78BFA; margin-bottom: 4px;">2. SHADOW SANDBOX TEST</div>
+            <div class="mono" style="font-size: 9px; color: #CBD5E1; text-align: left; background: #070A12; padding: 6px; border-radius: 5px;">
+              $ replay --payload=burst.json<br>
+              <span style="color: #EF4444;">[FAIL] Err: pool.exhausted (500)</span>
+            </div>
+          </div>
+
+          <span style="font-size: 18px; color: #64748B;">➔</span>
+
+          <!-- Step 4: Verified Ground Truth -->
+          <div style="flex: 1; background: rgba(6, 78, 59, 0.6); border: 1px solid #10B981; border-radius: 7px; padding: 12px; text-align: center;">
+            <div style="font-size: 9.5px; font-weight: 700; color: #34D399; margin-bottom: 4px;">3. ROOT CAUSE PROVEN</div>
+            <div class="mono" style="font-size: 10px; color: #D1FAE5; font-weight: 700;">
+              HYPOTHESIS VERIFIED<br>
+              <span style="font-size: 9px; color: #A7F3D0; font-weight: normal;">Fix proceeds safely</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 2 Detail Column Explanations -->
+      <div class="grid-2" style="gap: 12px; margin-bottom: 12px;">
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">Compilers as Ground Truth Arbiters</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            LLMs can invent nonexistent configuration keys or hallucinate APIs. But a Docker container executing the service’s real binary cannot be tricked. If the generated test passes, it works; if it fails, the AI is immediately corrected.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">Automatic Backtracking on Refutation</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            When a sandbox test fails to reproduce the observed failure, TraceHeal does not force a fix. It marks the hypothesis REFUTED, iterates backward through the causal span graph, and tests the next candidate in line.
+          </p>
+        </div>
+      </div>
+
+      <!-- Verification Metrics Table to fill vertical space -->
+      <div class="card" style="padding: 12px 16px;">
+        <div style="font-size: 11px; font-weight: 700; color: #38BDF8; margin-bottom: 6px;">EMPIRICAL FALSIFICATION CRITERIA:</div>
+        <div class="grid-3" style="gap: 8px;">
+          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #EF4444; font-size: 9.5px;">Error Signature Match</div>
+            <div style="font-size: 8px; color: #94A3B8;">Sandbox reproduces identical status code and stack trace.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #F59E0B; font-size: 9.5px;">Candidate Search Budget</div>
+            <div style="font-size: 8px; color: #94A3B8;">Maximum 3 hypothesis cycles before human escalation.</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+            <div style="font-weight: 700; color: #10B981; font-size: 9.5px;">Zero-Regression Pass</div>
+            <div style="font-size: 8px; color: #94A3B8;">All pre-existing unit and integration tests return green.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Quote Banner -->
+    <div style="background: rgba(14, 165, 233, 0.12); border: 1px solid rgba(14, 165, 233, 0.3); border-radius: 8px; padding: 12px; text-align: center;">
+      <span style="font-size: 11.5px; font-weight: 700; color: #38BDF8;">
+        "Subjective AI suggestions become empirical facts only when proven in execution."
+      </span>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 06 • EMPIRICAL SANDBOX FALSIFICATION</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 8: SAFE REMEDIATION & VALIDATION
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">07 • SAFETY & GOVERNANCE</div>
+        <div class="page-counter">08 / 12</div>
+      </div>
+
+      <div class="section-badge">PRODUCTION SAFETY CONTROLS</div>
+      <h2 class="page-title">Self-Healing — Built With Enterprise Guardrails</h2>
+      <p class="page-subtitle">TraceHeal does not touch production unassisted. Every remediation passes through strict policy gates and canary validations.</p>
+
+      <!-- Guardrail Decision Tree Diagram -->
+      <div class="diagram-container" style="padding: 14px;">
+        <svg viewBox="0 0 620 150" style="width: 100%; height: auto;">
+          <!-- Proposed Fix -->
+          <g transform="translate(15, 52)">
+            <rect width="115" height="42" rx="6" fill="#0F172A" stroke="#00F0FF" stroke-width="1.3" />
+            <text x="57.5" y="20" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#00F0FF" font-weight="700">AI PROPOSES FIX</text>
+            <text x="57.5" y="32" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Config / Patch</text>
+          </g>
+          <path d="M 130 73 L 160 73" stroke="#00F0FF" stroke-width="2" />
+
+          <!-- Policy Check -->
+          <g transform="translate(160, 52)">
+            <rect width="115" height="42" rx="6" fill="#0F172A" stroke="#F59E0B" stroke-width="1.3" />
+            <text x="57.5" y="20" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#FBBF24" font-weight="700">POLICY CHECK</text>
+            <text x="57.5" y="32" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Blast Radius Rules</text>
+          </g>
+          <path d="M 275 73 L 305 73" stroke="#F59E0B" stroke-width="2" />
+
+          <!-- Sandbox Test Gate -->
+          <g transform="translate(305, 52)">
+            <rect width="115" height="42" rx="6" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.3" />
+            <text x="57.5" y="20" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#A78BFA" font-weight="700">SANDBOX TEST</text>
+            <text x="57.5" y="32" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Re-run Tests</text>
+          </g>
+
+          <!-- Branching Paths -->
+          <!-- Failed -->
+          <path d="M 362 52 L 362 22 L 460 22" stroke="#EF4444" stroke-width="2" />
+          <g transform="translate(460, 9)">
+            <rect width="145" height="28" rx="5" fill="#450A0A" stroke="#EF4444" stroke-width="1.3" />
+            <text x="72.5" y="18" text-anchor="middle" font-size="9" font-family="'JetBrains Mono'" fill="#FCA5A5" font-weight="700">FAILED ➔ BLOCK & ESCALATE</text>
+          </g>
+
+          <!-- Passed -->
+          <path d="M 420 73 L 455 73" stroke="#10B981" stroke-width="2" />
+          <g transform="translate(455, 52)">
+            <rect width="155" height="42" rx="6" fill="#064E3B" stroke="#10B981" stroke-width="1.6" />
+            <text x="77.5" y="20" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="800">HUMAN APPROVAL GATE</text>
+            <text x="77.5" y="32" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#D1FAE5">GitHub PR with Test Proof</text>
+          </g>
+
+          <!-- Bottom Canary Verification -->
+          <path d="M 532 94 L 532 115 L 362 115" stroke="#10B981" stroke-width="2" />
+          <g transform="translate(180, 102)">
+            <rect width="182" height="28" rx="5" fill="#0F172A" stroke="#10B981" stroke-width="1.2" />
+            <text x="91" y="18" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#6EE7B7">Canary Deploy ➔ Auto-Rollback if Err</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 4 Enterprise Safety Pillars -->
+      <div class="grid-4" style="gap: 9px; margin-bottom: 12px;">
+        <div class="card">
+          <span class="badge-cyan" style="margin-bottom: 5px;">Pillar 1</span>
+          <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin: 4px 0;">Sandbox First</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Zero code touches production without prior sandbox execution and regression test passes.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="badge-amber" style="margin-bottom: 5px;">Pillar 2</span>
+          <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin: 4px 0;">Policy Bounds</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Destructive operations (table drops, volume deletions) are blocked at the engine level.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="badge-success" style="margin-bottom: 5px;">Pillar 3</span>
+          <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin: 4px 0;">Human-Gated</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Delivered as a Pull Request. Requires explicit 1-click human merge or operator authorization.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="badge-danger" style="margin-bottom: 5px;">Pillar 4</span>
+          <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin: 4px 0;">Instant Rollback</div>
+          <p style="font-size: 9px; color: #94A3B8; line-height: 1.4;">
+            Canary deployments monitor error rates and automatically roll back within milliseconds if anomalies recur.
+          </p>
+        </div>
+      </div>
+
+      <!-- Policy Whitelist Summary Card -->
+      <div class="card" style="padding: 12px 16px;">
+        <div style="font-size: 11px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">REMEDIATION CAPABILITY MATRIX:</div>
+        <div class="grid-3" style="gap: 8px;">
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 7px; border-radius: 5px; border-left: 2px solid #10B981;">
+            <div style="font-weight: 700; color: #34D399; font-size: 9.5px;">ALLOWED (Sandbox)</div>
+            <div style="font-size: 8px; color: #94A3B8;">Config edits, thread pool tuning, patch execution, stress re-runs.</div>
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.1); padding: 7px; border-radius: 5px; border-left: 2px solid #F59E0B;">
+            <div style="font-weight: 700; color: #FBBF24; font-size: 9.5px;">HUMAN-GATED (Prod)</div>
+            <div style="font-size: 8px; color: #94A3B8;">PR creation, Helm value changes, canary deployment rollouts.</div>
+          </div>
+          <div style="background: rgba(239, 68, 68, 0.1); padding: 7px; border-radius: 5px; border-left: 2px solid #EF4444;">
+            <div style="font-weight: 700; color: #F87171; font-size: 9.5px;">BLOCKED ALWAYS</div>
+            <div style="font-size: 8px; color: #94A3B8;">DROP TABLE, DELETE PVC, unauthenticated cloud IAM mutations.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 07 • ENTERPRISE GOVERNANCE & SAFETY CONTROLS</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 9: END-TO-END DEMO SCENARIO
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">08 • 24-HOUR DEMO PROOF</div>
+        <div class="page-counter">09 / 12</div>
+      </div>
+
+      <div class="section-badge">REALISTIC LIVE DEMONSTRATION</div>
+      <h2 class="page-title">One Incident. End-to-End.</h2>
+      <p class="page-subtitle">A realistic demonstration resolving a payment service database connection pool bottleneck in under 90 seconds.</p>
+
+      <!-- Demo Scenario Topology -->
+      <div class="card card-glow-cyan" style="padding: 14px; margin-bottom: 12px;">
+        <div style="font-size: 12px; font-weight: 700; color: #00F0FF; margin-bottom: 4px;">DEMO TOPOLOGY & FAILURE INJECTION</div>
+        <p style="font-size: 10.5px; color: #CBD5E1; line-height: 1.45;">
+          A burst load of 10 concurrent transactions is fired at the Checkout API. The downstream Payment Service has a database connection pool limit of 2, leading to rapid pool starvation and cascading HTTP 500 errors across upstream services.
+        </p>
+      </div>
+
+      <!-- Before vs. After Telemetry Cards -->
+      <div class="grid-2" style="gap: 12px; margin-bottom: 12px;">
+        
+        <!-- Before Card -->
+        <div class="card card-glow-red" style="padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 800; color: #F87171;">BEFORE TRACEHEAL</span>
+            <span class="badge-danger">Active Outage</span>
+          </div>
+          <div class="grid-3" style="text-align: center; gap: 6px;">
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">HTTP 500 ERRORS</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #EF4444;">38.4%</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">p99 LATENCY</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #EF4444;">1,420ms</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">DB POOL USE</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #EF4444;">100% (Locked)</div>
+            </div>
+          </div>
+          <div style="font-size: 8px; color: #64748B; margin-top: 6px; text-align: right;">*Illustrative demo metrics</div>
+        </div>
+
+        <!-- After Card -->
+        <div class="card card-glow-green" style="padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 800; color: #34D399;">AFTER TRACEHEAL RESOLUTION</span>
+            <span class="badge-success">Recovered & Verified</span>
+          </div>
+          <div class="grid-3" style="text-align: center; gap: 6px;">
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">HTTP 500 ERRORS</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #10B981;">0.0%</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">p99 LATENCY</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #10B981;">42ms</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px; border-radius: 6px;">
+              <div style="font-size: 8.5px; color: #64748B;">DB POOL USE</div>
+              <div class="mono" style="font-size: 16px; font-weight: 800; color: #10B981;">22% (Normal)</div>
+            </div>
+          </div>
+          <div style="font-size: 8px; color: #64748B; margin-top: 6px; text-align: right;">*Illustrative demo metrics</div>
+        </div>
+
+      </div>
+
+      <!-- Chronological Steps List -->
+      <div class="card" style="padding: 12px 16px; margin-bottom: 10px;">
+        <div class="mono" style="font-size: 9.5px; color: #CBD5E1; line-height: 1.65;">
+          <span style="color: #00F0FF;">[T+05s]</span> Alert Ingested: Order Service reporting cascading HTTP 504 Gateway Timeouts.<br>
+          <span style="color: #00F0FF;">[T+18s]</span> Trace Agent traverses OTel span graph: root exception pinned to Payment DB query.<br>
+          <span style="color: #FBBF24;">[T+34s]</span> Sandbox Agent provisions isolated Docker replica of Payment Service.<br>
+          <span style="color: #FBBF24;">[T+52s]</span> Replay reproduces exact connection pool timeout error in container stdout.<br>
+          <span style="color: #34D399;">[T+68s]</span> Remediation Agent increases pool capacity and patches timeout handler in sandbox.<br>
+          <span style="color: #34D399;">[T+82s]</span> Validation Agent executes regression test: 100% requests pass HTTP 200 OK.<br>
+          <span style="color: #34D399;">[T+90s]</span> Ready-to-merge GitHub PR opened; Next.js dashboard topology turns green.
+        </div>
+      </div>
+
+      <!-- Live Terminal Output Preview to fill vertical space -->
+      <div class="card" style="padding: 10px 14px; background: #05070E; border: 1px solid rgba(0, 240, 255, 0.2);">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span class="mono" style="font-size: 8.5px; color: #00F0FF; font-weight: 700;">LIVE DOCKER SANDBOX LOGS</span>
+          <span class="mono" style="font-size: 8px; color: #64748B;">sandbox-exec-4902</span>
+        </div>
+        <div class="mono" style="font-size: 8px; color: #94A3B8; line-height: 1.4;">
+          docker run --rm -d --net=traceheal-net -e DB_POOL_SIZE=20 payment-svc:patched<br>
+          Running pytest /app/tests/test_integration.py ... <span style="color: #34D399;">PASSED (14/14 tests OK)</span><br>
+          Generated PR #42: "fix: increase db pool size to 20 with context timeout release"
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 08 • VALIDATION BENCHMARKS & REFERENCE DEMO</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 10: TECHNICAL ARCHITECTURE & STACK
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">09 • SYSTEM ARCHITECTURE</div>
+        <div class="page-counter">10 / 12</div>
+      </div>
+
+      <div class="section-badge">ENGINEERING SPECIFICATION</div>
+      <h2 class="page-title">Under the Hood: Enterprise Cloud-Native Stack</h2>
+      <p class="page-subtitle">A standards-compliant architecture connecting OpenTelemetry collectors with Python agent runtimes and container sandboxes.</p>
+
+      <!-- Architecture Layers Block Diagram -->
+      <div class="diagram-container" style="padding: 12px; margin-bottom: 12px;">
+        <svg viewBox="0 0 620 120" style="width: 100%; height: auto;">
+          <!-- Ingestion -->
+          <g transform="translate(10, 15)">
+            <rect width="135" height="90" rx="7" fill="#0F172A" stroke="#334155" stroke-width="1.3" />
+            <text x="67.5" y="26" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#94A3B8" font-weight="700">TELEMETRY LAYER</text>
+            <text x="67.5" y="47" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#38BDF8">OpenTelemetry</text>
+            <text x="67.5" y="62" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#64748B">Traces • Metrics • Logs</text>
+            <text x="67.5" y="76" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#64748B">OTel Collector</text>
+          </g>
+          <path d="M 145 60 L 165 60" stroke="#00F0FF" stroke-width="2" />
+
+          <!-- Orchestration -->
+          <g transform="translate(165, 15)">
+            <rect width="155" height="90" rx="7" fill="#0B132B" stroke="#00F0FF" stroke-width="1.8" />
+            <text x="77.5" y="26" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#00F0FF" font-weight="800">AGENT ORCHESTRATION</text>
+            <text x="77.5" y="47" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#FFFFFF">LangGraph StateGraph</text>
+            <text x="77.5" y="62" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">Python / FastAPI Backend</text>
+            <text x="77.5" y="76" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#38BDF8">Anthropic / OpenAI API</text>
+          </g>
+          <path d="M 320 60 L 340 60" stroke="#00F0FF" stroke-width="2" />
+
+          <!-- Execution -->
+          <g transform="translate(340, 15)">
+            <rect width="135" height="90" rx="7" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.3" />
+            <text x="67.5" y="26" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#A78BFA" font-weight="700">SHADOW SANDBOX</text>
+            <text x="67.5" y="47" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#FFFFFF">Docker SDK</text>
+            <text x="67.5" y="62" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#64748B">Ephemeral Containers</text>
+            <text x="67.5" y="76" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#64748B">Isolated Network Bridge</text>
+          </g>
+          <path d="M 475 60 L 495 60" stroke="#10B981" stroke-width="2" />
+
+          <!-- Presentation -->
+          <g transform="translate(495, 15)">
+            <rect width="115" height="90" rx="7" fill="#0F172A" stroke="#10B981" stroke-width="1.3" />
+            <text x="57.5" y="26" text-anchor="middle" font-size="9.5" font-family="'Plus Jakarta Sans'" fill="#34D399" font-weight="700">CONTROL PLANE</text>
+            <text x="57.5" y="47" text-anchor="middle" font-size="8.5" font-family="'JetBrains Mono'" fill="#FFFFFF">Next.js 14</text>
+            <text x="57.5" y="62" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#94A3B8">React Flow Graph</text>
+            <text x="57.5" y="76" text-anchor="middle" font-size="8" font-family="'JetBrains Mono'" fill="#34D399">GitHub PR Delivery</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Technology Stack Table -->
+      <div class="card" style="padding: 10px 14px; margin-bottom: 10px;">
+        <table class="tech-table">
+          <thead>
+            <tr>
+              <th>System Layer</th>
+              <th>Technology Chosen</th>
+              <th>Architectural Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Frontend UI</td>
+              <td class="mono" style="color: #00F0FF;">Next.js 14 / React / Tailwind</td>
+              <td>Real-time incident response console and human approval interface</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Topology Viz</td>
+              <td class="mono" style="color: #00F0FF;">React Flow</td>
+              <td>Interactive node graph with dynamic service state rendering</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Backend API</td>
+              <td class="mono" style="color: #38BDF8;">Python 3.11 / FastAPI</td>
+              <td>High-performance asynchronous telemetry and webhook ingestion</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Orchestration</td>
+              <td class="mono" style="color: #38BDF8;">LangGraph (StateGraph)</td>
+              <td>Stateful multi-agent DAG execution and backtracking state machine</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Observability</td>
+              <td class="mono" style="color: #A78BFA;">OpenTelemetry (OTel)</td>
+              <td>Open-standard distributed tracing, context propagation, and span trees</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">Sandbox Runtime</td>
+              <td class="mono" style="color: #A78BFA;">Docker SDK (Python)</td>
+              <td>Ephemeral container lifecycle management for isolated reproduction</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">State Store</td>
+              <td class="mono" style="color: #34D399;">PostgreSQL</td>
+              <td>Persistent incident logs, audit trails, and telemetry history</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 700; color: #FFFFFF;">VCS & Delivery</td>
+              <td class="mono" style="color: #34D399;">GitHub REST API</td>
+              <td>Automated Pull Request creation with verified test logs attached</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Protocol Standards Callout to fill vertical space -->
+      <div class="card" style="padding: 10px 14px; background: rgba(30, 41, 59, 0.4);">
+        <div style="font-size: 10.5px; font-weight: 700; color: #00F0FF; margin-bottom: 2px;">INTEROPERABILITY & OPEN STANDARDS:</div>
+        <p style="font-size: 8.5px; color: #94A3B8; line-height: 1.4;">
+          TraceHeal avoids proprietary agent instrumentation. By relying strictly on W3C TraceContext standards and the OpenTelemetry Protocol (OTLP), any enterprise application instrumented with OTel can immediately stream trace trees to TraceHeal without code changes.
+        </p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 09 • TECHNICAL STACK & CLOUD-NATIVE DESIGN</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 11: IMPACT + FUTURE SCOPE
+==================================================================== -->
+<div class="page">
+  <div class="page-content">
+    <div>
+      <div class="page-header">
+        <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+        <div class="header-tag">10 • VALUE & EVOLUTION</div>
+        <div class="page-counter">11 / 12</div>
+      </div>
+
+      <div class="section-badge">COMMERCIAL IMPACT & ROADMAP</div>
+      <h2 class="page-title">From Hackathon Prototype to Enterprise Platform</h2>
+      <p class="page-subtitle">A phased evolutionary trajectory moving from local Docker validation to Kubernetes-native autonomous reliability engineering.</p>
+
+      <!-- 4 Impact Quadrants -->
+      <div class="grid-2" style="gap: 12px; margin-bottom: 12px;">
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #00F0FF; margin-bottom: 4px;">For SRE & On-Call Teams</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            Cuts Mean Time to Investigate (MTTI) from 45+ minutes to under 90 seconds. Eradicates 2 AM alert fatigue by distilling cascading alerts into a single verified incident dossier.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #38BDF8; margin-bottom: 4px;">For Engineering Organizations</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            Prevents costly outages and reduces developer toil. Replaces subjective debugging debates with reproducible Docker integration tests.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #A78BFA; margin-bottom: 4px;">For Cloud-Native Enterprises</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            Protects top-line transactional revenue during peak retail/financial spikes. Seamlessly integrates with existing OpenTelemetry telemetry investments.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 12px; font-weight: 700; color: #34D399; margin-bottom: 4px;">For Applied AI Trust</div>
+          <p style="font-size: 10px; color: #94A3B8; line-height: 1.45;">
+            Sets a new industry benchmark for mission-critical AI: AI recommendations are never permitted to touch production until verified by an isolated sandbox test suite.
+          </p>
+        </div>
+      </div>
+
+      <!-- Evolutionary Roadmap Timeline -->
+      <div class="card card-glow-cyan" style="padding: 14px; margin-bottom: 10px;">
+        <div class="mono" style="font-size: 11px; font-weight: 700; color: #00F0FF; margin-bottom: 8px;">PRODUCT ROADMAP & EXPANSION</div>
+        <div class="grid-4" style="gap: 8px; text-align: center;">
+          <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border-top: 2px solid #00F0FF;">
+            <div class="mono" style="font-size: 9px; color: #00F0FF; font-weight: 700;">PHASE 1 (NOW)</div>
+            <div style="font-size: 10px; font-weight: 700; color: #FFFFFF; margin: 3px 0;">Hackathon Demo</div>
+            <div style="font-size: 8.5px; color: #94A3B8;">3-Tier Docker reference architecture & local sandbox replay.</div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border-top: 2px solid #38BDF8;">
+            <div class="mono" style="font-size: 9px; color: #38BDF8; font-weight: 700;">PHASE 2 (NEXT)</div>
+            <div style="font-size: 10px; font-weight: 700; color: #FFFFFF; margin: 3px 0;">K8s Operator</div>
+            <div style="font-size: 8.5px; color: #94A3B8;">Ephemeral debug pods & isolated namespace recreation.</div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border-top: 2px solid #8B5CF6;">
+            <div class="mono" style="font-size: 9px; color: #8B5CF6; font-weight: 700;">PHASE 3 (THEN)</div>
+            <div style="font-size: 10px; font-weight: 700; color: #FFFFFF; margin: 3px 0;">eBPF Telemetry</div>
+            <div style="font-size: 8.5px; color: #94A3B8;">Kernel-level network capture & automated ArgoCD canaries.</div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border-top: 2px solid #10B981;">
+            <div class="mono" style="font-size: 9px; color: #10B981; font-weight: 700;">PHASE 4 (FUTURE)</div>
+            <div style="font-size: 10px; font-weight: 700; color: #FFFFFF; margin: 3px 0;">Incident Memory</div>
+            <div style="font-size: 8.5px; color: #94A3B8;">Enterprise-wide vector search over historical post-mortems.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI Summary Card to fill vertical space -->
+      <div class="card" style="padding: 12px 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: #FFFFFF;">PROJECTED ENTERPRISE EFFICIENCY GAINS:</div>
+            <div style="font-size: 9px; color: #94A3B8; margin-top: 2px;">Based on SRE on-call benchmarks across mid-sized cloud engineering teams.</div>
+          </div>
+          <div style="display: flex; gap: 14px;">
+            <div style="text-align: center;"><span class="mono" style="color: #00F0FF; font-weight: 800; font-size: 15px;">-92%</span><div style="font-size: 7.5px; color: #64748B;">MTTI DROP</div></div>
+            <div style="text-align: center;"><span class="mono" style="color: #34D399; font-weight: 800; font-size: 15px;">100%</span><div style="font-size: 7.5px; color: #64748B;">TEST AUDIT PROOF</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>TRACEHEAL ARCHITECTURAL WHITEPAPER</span>
+      <span>SECTION 10 • VALUE CREATION & ROADMAP</span>
+      <span>OCTOBER 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================
+     PAGE 12: FINAL CLOSE / MANIFESTO
+==================================================================== -->
+<div class="page" style="background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.14) 0%, rgba(7, 10, 19, 1) 80%);">
+  <div class="page-content">
+    
+    <div class="page-header">
+      <div class="brand-logo"><div class="brand-dot"></div>TRACEHEAL</div>
+      <div class="header-tag">11 • CLOSING MANIFESTO</div>
+      <div class="page-counter">12 / 12</div>
+    </div>
+
+    <div style="text-align: center; margin: auto 0;">
+      <div class="section-badge" style="margin: 0 auto 16px auto;">THE FUTURE OF PRODUCTION RELIABILITY</div>
+      
+      <h1 style="font-size: 52px; font-weight: 800; letter-spacing: -0.035em; color: #FFFFFF; line-height: 1.1; margin-bottom: 16px;">
+        TRACE<span style="color: #00F0FF; text-shadow: 0 0 30px rgba(0, 240, 255, 0.55);">HEAL</span>
+      </h1>
+
+      <div style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px;">
+        <span style="font-size: 14.5px; font-weight: 700; color: #00F0FF;">Trace it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 14.5px; font-weight: 700; color: #38BDF8;">Reproduce it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 14.5px; font-weight: 700; color: #818CF8;">Verify it.</span>
+        <span style="color: #475569;">•</span>
+        <span style="font-size: 14.5px; font-weight: 700; color: #34D399;">Heal it.</span>
+      </div>
+
+      <!-- Manifesto Blockquote -->
+      <div style="max-width: 86%; margin: 0 auto; background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(0, 240, 255, 0.35); border-radius: 12px; padding: 26px 34px; text-align: center; box-shadow: 0 0 45px rgba(0, 240, 255, 0.09);">
+        <p style="font-size: 15.5px; font-weight: 500; color: #F1F5F9; line-height: 1.65; font-style: italic;">
+          "Modern distributed systems do not need another dashboard that tells engineers something went wrong. They need an intelligent system that can investigate the evidence, test its own hypothesis, and help engineers recover safely."
+        </p>
+      </div>
+
+      <!-- Core Pillars Row -->
+      <div class="grid-4" style="max-width: 92%; margin: 35px auto 0 auto; gap: 10px;">
+        <div style="background: rgba(15, 23, 42, 0.65); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #64748B; text-transform: uppercase;">FOUNDATION</div>
+          <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; margin-top: 3px;">OpenTelemetry</div>
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.65); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #64748B; text-transform: uppercase;">GROUND TRUTH</div>
+          <div style="font-size: 12px; font-weight: 700; color: #00F0FF; margin-top: 3px;">Docker Sandbox</div>
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.65); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #64748B; text-transform: uppercase;">GOVERNANCE</div>
+          <div style="font-size: 12px; font-weight: 700; color: #A78BFA; margin-top: 3px;">Human-Gated PR</div>
+        </div>
+        <div style="background: rgba(15, 23, 42, 0.65); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #64748B; text-transform: uppercase;">OUTCOME</div>
+          <div style="font-size: 12px; font-weight: 700; color: #34D399; margin-top: 3px;">Verified SRE</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Tagline Bar -->
+    <div style="text-align: center; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, 0.09);">
+      <span class="mono" style="font-size: 11px; font-weight: 700; color: #94A3B8; letter-spacing: 0.18em;">
+        AUTONOMOUS INVESTIGATION • VERIFIED REMEDIATION • SAFER SRE
+      </span>
+      <div style="font-size: 9.5px; color: #475569; margin-top: 4px;">
+        HACKYARD BUILD 2026 • ROUND 1 IDEA SUBMISSION • IIT GUWAHATI
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

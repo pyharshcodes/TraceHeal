@@ -1,0 +1,138 @@
+================================================================================
+TRACEHEAL: AUTONOMOUS INCIDENT INVESTIGATION & SHADOW-VERIFIED REMEDIATION
+Hackyard Build 2026 — Round 1 Idea Submission Document
+================================================================================
+
+1. PROJECT NAME & TAGLINE
+Project Name: TraceHeal
+Tagline: Autonomous Incident Investigation & Shadow-Verified Remediation for Microservices
+
+--------------------------------------------------------------------------------
+2. ONE-LINE ELEVATOR PITCH
+TraceHeal transforms noisy microservice alerts into verified fixes by using 
+OpenTelemetry distributed traces to formulate causal hypotheses, proving them 
+inside isolated shadow sandboxes before proposing safe, human-approved remediations.
+
+--------------------------------------------------------------------------------
+3. PROBLEM STATEMENT
+Modern cloud-native applications rely on complex, polyglot microservice graphs. 
+While distributed architectures provide scalability, they introduce severe 
+operational bottlenecks during production incidents:
+1. Cascading Alert Storms: A single downstream bottleneck (e.g., database connection 
+   pool exhaustion) cascades upstream, causing dozens of independent services to 
+   fire alerts simultaneously, creating extreme alert fatigue.
+2. Symptom vs. Cause Ambiguity: Monitoring tools show where symptoms manifest 
+   (e.g., HTTP 504 on an API gateway) rather than where the fault originated 
+   (e.g., connection starvation four hops deep). Correlating distributed traces, 
+   logs, and metrics manually takes SREs 45+ minutes.
+3. The Risk of Unverified AI: Generative AI tools provide plausible-sounding 
+   text advice that frequently hallucinates in complex distributed race conditions. 
+   Acting on unverified AI recommendations risks escalating an active incident.
+4. The Remediation Dilemma: Autonomous healing has historically failed in enterprises 
+   because unconstrained write-access is dangerous. Without an empirical mechanism 
+   to test fixes in an isolated environment first, automated remediation cannot be trusted.
+
+--------------------------------------------------------------------------------
+4. EXISTING APPROACHES & THE CRITICAL GAP
+Current tools provide telemetry, alerting, topological maps (Dynatrace Davis), 
+and LLM text summaries (Datadog Bits AI, PagerDuty Advance).
+The Critical Gap: Diagnosis is not the same as verified diagnosis.
+Existing platforms are strictly observational and advisory. They answer "What happened?" 
+and offer probabilistic guesses on "What might fix it?" None of them close the loop 
+with empirical validation: they do not spin up an isolated replica of the failing 
+service boundary to reproduce the incident or test the fix. Human SREs must absorb 
+100% of the risk of testing hypotheses directly in staging or production.
+
+--------------------------------------------------------------------------------
+5. PROPOSED SOLUTION
+TraceHeal follows an 8-step evidence-based lifecycle:
+01. DETECT: Ingest streaming metrics and capture anomalies beyond dynamic baselines.
+02. CORRELATE: Group cascading multi-service alerts into a single unified incident.
+03. TRACE: Traverse OpenTelemetry span DAGs to isolate the earliest point of failure.
+04. HYPOTHESIZE: Correlate span metadata and recent git diffs to formulate causal candidates.
+05. REPRODUCE: Spin up an ephemeral Docker container and replay synthetic failing workloads.
+06. VERIFY: Confirm if the reproduction matches the observed failure; backtrack if disproven.
+07. REMEDIATE: Generate a policy-controlled configuration update or targeted code patch.
+08. VALIDATE: Re-execute test suites in the sandbox to prove resolution before human handoff.
+
+--------------------------------------------------------------------------------
+6. WHAT MAKES IT UNIQUE: EVIDENCE-DRIVEN INCIDENT VERIFICATION
+Instead of:
+Alert Storm -> LLM Prompt -> Unverified Advice (High Hallucination Risk)
+
+TraceHeal enforces:
+Alert -> Evidence -> Causal Hypothesis -> Ephemeral Sandbox -> Empirical Verification 
+-> Safe Remediation -> Sandbox Validation -> Human Gate (GitHub PR)
+
+Why this is defensible:
+1. Compilers and test runtimes enforce ground truth: An LLM may hallucinate that a 
+   parameter exists; the containerized sandbox will fail immediately if it does not.
+2. Zero production blast radius: High-risk experiments occur in throwaway shadow containers.
+3. Actionable confidence: On-call engineers receive empirical proof (logs + passed tests) 
+   rather than speculative suggestions.
+
+--------------------------------------------------------------------------------
+7. AGENTIC ARCHITECTURE
+TraceHeal coordinates specialized agents over a shared incident blackboard state:
+- Incident Triage Agent: Deduplicates cascading alerts and defines blast radius.
+- Trace Intelligence Agent: Reconstructs OpenTelemetry span trees and locates earliest fault.
+- Root Cause Agent: Cross-references trace context with repository commits to form hypotheses.
+- Sandbox Reproduction Agent: Provisions ephemeral Docker container and replays failing workload.
+- Remediation Agent: Generates candidate configuration adjustments or code patches.
+- Validation Agent: Runs service test suites inside the sandbox to prove zero regressions.
+- Postmortem Agent: Compiles the complete evidence chain into an auditable GitHub Pull Request.
+
+--------------------------------------------------------------------------------
+8. TECHNOLOGY STACK
+- Frontend: Next.js 14, React, Tailwind CSS
+- Topology Visualization: React Flow
+- Backend: Python, FastAPI
+- Agent Orchestration: LangGraph (StateGraph)
+- Observability Standard: OpenTelemetry (OTel) Tracing & Spans
+- Sandbox Isolation: Docker SDK (Python), Ephemeral Containers
+- Incident & State Store: PostgreSQL
+- Delivery & VCS: GitHub REST API, Webhooks
+- AI Reasoning: Anthropic Claude / OpenAI API
+
+--------------------------------------------------------------------------------
+9. SAFETY & ENTERPRISE RELIABILITY
+- Sandbox-First Isolation: Remediation testing is decoupled from production networks.
+- Deterministic Confidence Thresholds: If an incident cannot be reproduced within 3 cycles, 
+  TraceHeal flags UNVERIFIED_ESCALATION and transfers context to human SREs.
+- Policy Controls & Whitelisting: Destructive operations (drop tables, delete volumes) 
+  are blocked at the engine level.
+- Human Approval Gate: Output is delivered as a verified GitHub Pull Request or 1-click canary.
+- Immutable Audit Trail: Every prompt, tool call, container log, and trace is fully indexed.
+
+--------------------------------------------------------------------------------
+10. DEMO SCENARIO: 24-HOUR PROOF OF CONCEPT
+Scenario: E-commerce Payment Service fails due to Database Connection Pool Exhaustion.
+1. Chaos Injection: 10 concurrent requests overload Payment Service (pool size = 2). 
+   Order Service throws cascading HTTP 500s.
+2. Detection: Next.js dashboard detects alert; React Flow topology nodes turn red.
+3. Trace Analysis: Trace Agent isolates root span error in Payment Service: 
+   "Timeout: connection pool exhausted".
+4. Sandbox Reproduction: Ephemeral Docker container replays burst load and reproduces 500 error.
+5. Safe Remediation: Remediation Agent updates pool configuration in sandbox.
+6. Validation: Re-test confirms 100% HTTP 200 OK responses with zero regressions.
+7. Delivery: Dashboard turns green; ready-to-merge GitHub PR opened with sandbox logs attached.
+
+--------------------------------------------------------------------------------
+11. IMPACT & FUTURE SCOPE
+- Reduced MTTI & MTTR: Shrinks investigation from 45+ minutes to under 90 seconds.
+- Eradicates Alert Fatigue: Groups dozens of symptoms into a single causal incident.
+- Trustworthy AI: Replaces hallucinated text with compiler-verified empirical proof.
+- Phased Roadmap:
+  * Phase 1 (Now): 3-Tier Docker reference architecture with local sandbox replay.
+  * Phase 2 (Next): Kubernetes-native operator with ephemeral debug namespaces.
+  * Phase 3 (Then): eBPF network telemetry & automated ArgoCD canary verification.
+  * Phase 4 (Future): Enterprise incident memory across historical post-mortems.
+
+--------------------------------------------------------------------------------
+12. WHY TRACEHEAL SHOULD BE SELECTED
+1. Solves a universal, multi-billion-dollar enterprise problem (downtime & SRE burnout).
+2. Deep technical foundation (OpenTelemetry spans + Docker runtimes + LangGraph state).
+3. Pioneers evidence-driven AI, solving the critical hallucination dilemma in infrastructure.
+4. Feasible and demonstrable within 24 hours at IIT Guwahati.
+5. Genuine commercial SaaS potential as a downstream layer to existing observability stacks.
+================================================================================

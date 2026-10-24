@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
+  <title>TraceHeal | Autonomous Incident Investigation & Shadow-Verified Self-Healing Platform</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Fullscreen Cinematic Launching Pad (Preserved Visuals, No 10-Second Line) -->
+  <div class="video-intro-overlay" id="videoIntroOverlay">
+    <video id="introVideo" src="/static/video/intro.mp4" autoplay loop muted playsinline></video>
+    <div class="video-overlay-gradient"></div>
+
+    <div class="video-overlay-top">
+      <div class="video-hackyard-tag">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+        <span>HACKYARD BUILD 2026 &bull; IIT GUWAHATI</span>
+        <span class="video-pill-divider">|</span>
+        <span style="color: #72b4ff; font-weight: 700;">TEAM: BITES AND BYTES</span>
+      </div>
+
+      <div class="video-overlay-actions">
+        <button class="btn-video-control" id="btnToggleVideoSound" onclick="toggleVideoSound()">
+          <span id="videoSoundIcon">🔇</span> <span id="videoSoundText">Unmute Audio</span>
+        </button>
+        <button class="btn-video-skip" id="btnSkipVideo" onclick="dismissLaunchingPad()">
+          Explore Overview <span style="font-size: 13px;">➔</span>
+        </button>
+        <button class="btn-video-enter" onclick="launchCommandCenter('overview')">
+          Enter Platform &rarr;
+        </button>
+      </div>
+    </div>
+
+    <div class="video-overlay-center">
+      <div class="video-eyebrow">A PLACE FOR PEOPLE WHO BUILD &bull; 24–25 OCT 2026</div>
+      <h1 class="video-main-title">
+        <span>CASCADING FAILURE STORM.</span><br/>
+        <span class="text-cyan-glow">AUTONOMOUS SRE RECOVERY.</span>
+      </h1>
+      <p class="video-subtitle">TraceHeal &bull; Built by Harsh Deep Chak &amp; Pallak Devi (Team Bites and Bytes)</p>
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 24px; flex-wrap: wrap;">
+        <button class="btn-hackyard-pill-primary" style="padding: 12px 28px; font-size: 14px;" onclick="launchCommandCenter('overview')">
+          Launch TraceHeal <span style="font-size: 16px;">&rarr;</span>
+        </button>
+        <button class="btn-hackyard-pill-secondary" style="padding: 12px 24px; font-size: 14px;" onclick="dismissLaunchingPad()">
+          Explore Overview <span style="font-size: 15px;">&darr;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Row (Clean: NO 10-second progress bar line, NO timer) -->
+    <div class="video-overlay-bottom">
+      <div class="video-bottom-row">
+        <span class="video-status-indicator">
+          <span class="pulse-dot-cyan"></span>
+          <span>Autonomous SRE Launching Pad &bull; Ready</span>
+        </span>
+        <span class="video-press-hint">Press <strong>SPACE</strong> or <strong>ESC</strong> to explore &bull; Instant Access</span>
+        <button class="btn-video-enter" onclick="launchCommandCenter('overview')">Enter Platform &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TraceHeal Enterprise Landing Page Container -->
+  <div class="hackyard-landing-page" id="hackyardLandingPage">
+    <!-- Top Navigation Bar -->
+    <header class="hackyard-nav" id="tracehealNav">
+      <div class="hackyard-container hackyard-nav-inner">
+        <!-- Brand Identity -->
+        <div class="hackyard-brand" onclick="returnToLanding()" style="cursor: pointer;" title="TraceHeal Home">
+          <div class="traceheal-nav-logo">
+            <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+              <rect width="32" height="32" rx="8" fill="#0b1324" stroke="rgba(59, 130, 246, 0.4)" stroke-width="1.5"/>
+              <path d="M 16 7 L 25 24 L 7 24 Z" stroke="rgba(59, 130, 246, 0.6)" stroke-width="1.5" stroke-dasharray="2 2" fill="none"/>
+              <circle cx="16" cy="7" r="3" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+              <circle cx="25" cy="24" r="3" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+              <circle cx="7" cy="24" r="3" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+              <circle cx="16" cy="18" r="4.5" fill="#10b981" filter="drop-shadow(0 0 6px #10b981)"/>
+              <path d="M 16 15.5 L 16 20.5 M 13.5 18 L 18.5 18" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="hackyard-brand-title">Trace<span style="color: #60a5fa;">Heal</span><span style="color: #38bdf8;">.</span></span>
+          <span class="hackyard-badge-pill" title="Built for Hackyard Build 2026 @ IIT Guwahati">BUILD 2026 &bull; IIT GUWAHATI</span>
+          <div class="hackyard-team-pill">
+            <span class="pulse-dot-green"></span>
+            <span>Team: <strong>Bites and Bytes</strong></span>
+          </div>
+        </div>
+
+        <!-- Center Navigation Links -->
+        <nav class="hackyard-nav-links">
+          <a href="#overview" class="hackyard-nav-link">Overview</a>
+          <a href="#howItWorks" class="hackyard-nav-link">How It Works</a>
+          <a href="#architecture" class="hackyard-nav-link">Architecture</a>
+          <a href="#teamSection" class="hackyard-nav-link">Team</a>
+        </nav>
+
+        <!-- Right Action: Launching Pad & Primary CTA -->
+        <div class="hackyard-nav-actions">
+          <button class="btn-hackyard-ghost" onclick="openLaunchingPad()" title="Open Cinematic Launching Pad">
+            ⚡ Launching Pad
+          </button>
+          <button class="btn-hackyard-pill-primary" onclick="launchCommandCenter('overview')">
+            Launch Platform <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="hackyard-container">
+      <!-- Hero Section: Balanced 2-Column Desktop Layout -->
+      <section class="hackyard-hero" id="overview">
+        <div class="hackyard-hero-layout">
+          <!-- Left Column: Product Information -->
+          <div class="hackyard-hero-copy">
+            <div class="hero-eyebrow-container">
+              <span class="pulse-dot-cyan"></span>
+              <span class="hackyard-hero-eyebrow">AI-POWERED AUTONOMOUS SRE</span>
+            </div>
+
+            <!-- Primary Heading: Dominant Visual Element -->
+            <h1 class="hackyard-hero-title">
+              <span class="hero-line-white">TraceHeal<span class="hero-brand-dot">.</span></span>
+            </h1>
+
+            <!-- Supporting Headline -->
+            <p class="hackyard-hero-tagline">
+              Autonomous Reliability. Intelligent Recovery.
+            </p>
+
+            <!-- Product Description -->
+            <p class="hackyard-hero-desc">
+              An AI-powered autonomous Site Reliability Engineering platform that detects cascading microservice failures, identifies root causes, generates verified fixes, and orchestrates intelligent recovery.
+            </p>
+
+            <!-- 4-Pillar Pipeline Subtext -->
+            <div class="hero-pillars-flow">
+              <span class="pillar-chip">Detect failures</span>
+              <span class="pillar-arrow">&bull;</span>
+              <span class="pillar-chip">Trace root causes</span>
+              <span class="pillar-arrow">&bull;</span>
+              <span class="pillar-chip">Verify fixes</span>
+              <span class="pillar-arrow">&bull;</span>
+              <span class="pillar-chip">Restore reliability</span>
+            </div>
+
+            <!-- Hero Action Buttons: Exactly 1 Primary, 1 Secondary -->
+            <div class="hackyard-hero-actions">
+              <button class="btn-hackyard-pill-primary btn-hero-cta" onclick="launchCommandCenter('overview')">
+                Launch TraceHeal <span class="cta-arrow">&rarr;</span>
+              </button>
+              <a href="#howItWorks" class="btn-hackyard-pill-secondary btn-hero-cta">
+                Explore How It Works <span class="cta-arrow-diag">&#x2197;</span>
+              </a>
+            </div>
+
+            <!-- Stats Ribbon Below Hero Actions -->
+            <div class="hackyard-hero-stats">
+              <div class="hero-stat-box">
+                <div class="hero-stat-number" style="color: #60a5fa;">1.2s</div>
+                <div class="hero-stat-label">MTTD (Detection)</div>
+              </div>
+              <div class="hero-stat-box">
+                <div class="hero-stat-number" style="color: #34d399;">8.4s</div>
+                <div class="hero-stat-label">Autonomous MTTR</div>
+              </div>
+              <div class="hero-stat-box">
+                <div class="hero-stat-number" style="color: #f59e0b;">6 Tiers</div>
+                <div class="hero-stat-label">Live Mesh Nodes</div>
+              </div>
+              <div class="hero-stat-box">
+                <div class="hero-stat-number" style="color: #38bdf8;">100%</div>
+                <div class="hero-stat-label">AST Verification</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Enhanced 3D Microservice Architecture Visual -->
+          <div class="hackyard-hero-artwork" id="hackyardHArtwork">
+            <div class="assembly-glow-backdrop"></div>
+
+            <!-- Floating Live Microservice Mesh Badges -->
+            <div class="floating-mesh-badge badge-pos-tl" title="API Gateway :8080">
+              <span class="node-live-dot"></span>
+              <span>gateway-service <strong style="color: #38bdf8;">:8080</strong></span>
+            </div>
+            <div class="floating-mesh-badge badge-pos-tr" title="Order Service :8081">
+              <span class="node-live-dot"></span>
+              <span>order-service <strong style="color: #38bdf8;">:8081</strong></span>
+            </div>
+            <div class="floating-mesh-badge badge-pos-mr" title="Payment Service :8082 (Active SRE Target)">
+              <span class="node-live-dot dot-sre-pulse"></span>
+              <span>payment-service <span class="badge-sre-tag">SRE TARGET</span></span>
+            </div>
+            <div class="floating-mesh-badge badge-pos-ml" title="Auth Service :8084">
+              <span class="node-live-dot"></span>
+              <span>auth-service <strong style="color: #38bdf8;">:8084</strong></span>
+            </div>
+            <div class="floating-mesh-badge badge-pos-bl" title="Inventory Service :8083">
+              <span class="node-live-dot"></span>
+              <span>inventory-service <strong style="color: #38bdf8;">:8083</strong></span>
+            </div>
+            <div class="floating-mesh-badge badge-pos-br" title="Notification Service :8085">
+              <span class="node-live-dot"></span>
+              <span>notification <strong style="color: #38bdf8;">:8085</strong></span>
+            </div>
+
+            <!-- Preserved 3D Microservice Architecture Assembly -->
+            <div class="assembly-scene" id="assemblyScene" title="Interactive 3D Microservice Mesh - Move cursor to tilt, click to rotate!">
+              <svg class="assembly-h-svg" viewBox="0 0 600 560" fill="none" focusable="false">
+                <defs>
+                  <linearGradient id="_R_hhbtb_-blue" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#72b4ff" />
+                    <stop offset=".35" stop-color="#2584f5" />
+                    <stop offset="1" stop-color="#1052d5" />
+                  </linearGradient>
+                  <linearGradient id="_R_hhbtb_-metal" x1="0" y1="0" x2="1" y2=".5">
+                    <stop stop-color="#7185a5" />
+                    <stop offset=".28" stop-color="#f3f8ff" />
+                    <stop offset=".55" stop-color="#a3b4cd" />
+                    <stop offset=".8" stop-color="#ffffff" />
+                    <stop offset="1" stop-color="#8d9cb5" />
+                  </linearGradient>
+                </defs>
+
+                <g class="h-root-group" transform="translate(4 8) rotate(-7 300 270)">
+                  <!-- Connecting Metal Telemetry Bus Lines -->
+                  <g fill="url(#_R_hhbtb_-metal)" stroke="#94aaca" stroke-width="1.2">
+                    <path class="h-rod rod-left" d="M190 153h12v182h-12z" />
+                    <path class="h-rod rod-right" d="M368 153h12v182h-12z" />
+                    <path class="h-rod rod-cross" d="M215 248h150v12H215z" />
+                  </g>
+
+                  <!-- Node: Top-Left (Gateway) -->
+                  <g class="h-cube cube-tl" data-cube="gateway">
+                    <path d="M160 100l23 -14h68l-23 14Z" fill="#88bfff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M228 100l23 -14v68l-23 14Z" fill="#104fbf"></path>
+                    <rect x="160" y="100" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-blue)" stroke="#84baff" stroke-width="1.2"></rect>
+                    <path d="M165 102h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+
+                  <!-- Node: Top-Right (Order Service) -->
+                  <g class="h-cube cube-tr" data-cube="order">
+                    <path d="M338 100l23 -14h68l-23 14Z" fill="#88bfff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M406 100l23 -14v68l-23 14Z" fill="#104fbf"></path>
+                    <rect x="338" y="100" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-blue)" stroke="#84baff" stroke-width="1.2"></rect>
+                    <path d="M343 102h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+
+                  <!-- Node: Mid-Left (Auth Service) -->
+                  <g class="h-cube cube-ml" data-cube="auth">
+                    <path d="M160 202l23 -14h68l-23 14Z" fill="#88bfff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M228 202l23 -14v68l-23 14Z" fill="#104fbf"></path>
+                    <rect x="160" y="202" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-blue)" stroke="#84baff" stroke-width="1.2"></rect>
+                    <path d="M165 204h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+
+                  <!-- Node: Mid-Right (Payment Service - Chrome Target Node) -->
+                  <g class="h-cube cube-mr" data-cube="payment">
+                    <path d="M338 202l23 -14h68l-23 14Z" fill="#f7fbff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M406 202l23 -14v68l-23 14Z" fill="#91a5c0"></path>
+                    <rect x="338" y="202" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-metal)" stroke="#e9f2ff" stroke-width="1.2"></rect>
+                    <path d="M343 204h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+
+                  <!-- Node: Bottom-Left (Inventory Service) -->
+                  <g class="h-cube cube-bl" data-cube="inventory">
+                    <path d="M160 304l23 -14h68l-23 14Z" fill="#88bfff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M228 304l23 -14v68l-23 14Z" fill="#104fbf"></path>
+                    <rect x="160" y="304" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-blue)" stroke="#84baff" stroke-width="1.2"></rect>
+                    <path d="M165 306h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+
+                  <!-- Node: Bottom-Right (Notification Service) -->
+                  <g class="h-cube cube-br" data-cube="notification">
+                    <path d="M338 304l23 -14h68l-23 14Z" fill="#88bfff" stroke="#acd2ff" stroke-width=".8"></path>
+                    <path d="M406 304l23 -14v68l-23 14Z" fill="#104fbf"></path>
+                    <rect x="338" y="304" width="68" height="68" rx="4" fill="url(#_R_hhbtb_-blue)" stroke="#84baff" stroke-width="1.2"></rect>
+                    <path d="M343 306h58" stroke="white" stroke-opacity=".65"></path>
+                  </g>
+                </g>
+              </svg>
+
+              <!-- Subtle Microservice Model Caption -->
+              <div class="assembly-caption">
+                <span><span class="pulse-dot-cyan"></span> Live 6-Tier Distributed Mesh</span>
+                <span>Interactive 3D Assembly &bull; Tilt or Click</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: How It Works / Problem vs Solution -->
+      <section class="hackyard-comparison-section" id="howItWorks">
+        <div style="text-align: center; margin-bottom: 36px;">
+          <div style="font-family: var(--font-mono); font-size: 11px; color: #60a5fa; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px;">
+            CLOSED-LOOP RELIABILITY
+          </div>
+          <h2 style="font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 10px;">
+            How TraceHeal Self-Heals Cascading Failures
+          </h2>
+          <p style="font-size: 15px; color: #94a3b8; max-width: 640px; margin: 0 auto;">
+            From 10,000+ noisy 500 error alerts to verified AST patch deployment and automated Git PR in <strong>8.4 seconds</strong>.
+          </p>
+        </div>
+
+        <!-- 7-Stage Autonomous Lifecycle Ribbon -->
+        <div class="lifecycle-stages-bar">
+          <div class="stage-step"><span class="step-num">1</span> <span class="step-txt">DETECTED (1.2s)</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step"><span class="step-num">2</span> <span class="step-txt">INVESTIGATING (RCA)</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step"><span class="step-num">3</span> <span class="step-txt">REPRODUCING (Sandbox)</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step"><span class="step-num">4</span> <span class="step-txt">VERIFIED (5/5 AST)</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step"><span class="step-num">5</span> <span class="step-txt">REMEDIATED (10% Canary)</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step"><span class="step-num">6</span> <span class="step-txt">RESOLVED</span></div>
+          <span class="stage-arrow">&rarr;</span>
+          <div class="stage-step step-closed"><span class="step-num">7</span> <span class="step-txt">CLOSED (Git PR)</span></div>
+        </div>
+
+        <div class="comparison-grid">
+          <!-- The Problem -->
+          <div class="problem-card">
+            <div class="card-kicker problem-kicker">🔴 THE CRITICAL PROBLEM</div>
+            <h3 class="card-headline">Cascading Outages &amp; Alert Storms</h3>
+            <div class="card-metric-highlight">
+              <span class="metric-big problem-metric">$5,600</span>
+              <span class="metric-sub">per minute cloud downtime cost</span>
+            </div>
+            <div class="bullet-list">
+              <div class="bullet-item">
+                <span class="bullet-icon-bad">✕</span>
+                <div><strong>Cascading Failure Storms:</strong> A single DB connection pool exhaustion in a payment service floods 10,000+ noisy 500 alerts across upstream order and gateway layers.</div>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet-icon-bad">✕</span>
+                <div><strong>The 80% MTTR Black Hole:</strong> Human engineers spend over 80% of incident response time just figuring out which service broke first and what caused it.</div>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet-icon-bad">✕</span>
+                <div><strong>Hasty Hotfix Regressions:</strong> Under 3 AM panic, rushed manual hotfixes frequently cause secondary outages due to unvetted code changes.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- The Solution -->
+          <div class="solution-card">
+            <div class="card-kicker solution-kicker">🟢 THE TRACEHEAL SOLUTION</div>
+            <h3 class="card-headline">Closed-Loop Autonomous Self-Healing</h3>
+            <div class="card-metric-highlight">
+              <span class="metric-big solution-metric">8.4s</span>
+              <span class="metric-sub">end-to-end autonomous MTTR</span>
+            </div>
+            <div class="bullet-list">
+              <div class="bullet-item">
+                <span class="bullet-icon-good">✓</span>
+                <div><strong>Causal DAG Trace Correlation:</strong> An autonomous RCA agent traverses OpenTelemetry distributed traces to isolate root cause in 1.2s with 95%+ confidence.</div>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet-icon-good">✓</span>
+                <div><strong>Deterministic AST Proof Gate:</strong> Synthesizes code/config patches and validates 5/5 AST safety gates. Malicious calls like <code>eval()</code> or <code>exec()</code> are strictly rejected.</div>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet-icon-good">✓</span>
+                <div><strong>Shadow Child Process Sandbox:</strong> Executes the patch in an isolated port-9100 process to guarantee zero production regressions before deploying a 10% canary.</div>
+              </div>
+              <div class="bullet-item">
+                <span class="bullet-icon-good">✓</span>
+                <div><strong>Automated Postmortem &amp; Git PR:</strong> Automatically closes the loop with full Markdown incident reports, MTTR metrics, and ready-to-merge Git branches.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: 6-Tier Architecture Overview -->
+      <section class="architecture-section" id="architecture">
+        <div style="text-align: center; margin-bottom: 36px;">
+          <div style="font-family: var(--font-mono); font-size: 11px; color: #60a5fa; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px;">
+            SYSTEM TOPOLOGY
+          </div>
+          <h2 style="font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 10px;">
+            6-Tier Distributed Mesh Architecture
+          </h2>
+          <p style="font-size: 15px; color: #94a3b8; max-width: 680px; margin: 0 auto;">
+            Every tier is instrumented with W3C distributed trace context propagation, sliding-window anomaly detectors, and isolated shadow verification sandboxes.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <!-- Gateway -->
+          <div class="service-mesh-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge">PORT 8080</div>
+              <span class="service-status-pill status-up">HEALTHY</span>
+            </div>
+            <h4 class="service-card-title">API Gateway</h4>
+            <p class="service-card-desc">Ingress routing, distributed trace context injection (W3C traceparent), TLS termination, and upstream load distribution.</p>
+            <div class="service-card-meta">
+              <span>Path: <code>/api/v1/*</code></span>
+              <span style="color: #60a5fa;">Upstream: Order</span>
+            </div>
+          </div>
+
+          <!-- Auth -->
+          <div class="service-mesh-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge">PORT 8084</div>
+              <span class="service-status-pill status-up">HEALTHY</span>
+            </div>
+            <h4 class="service-card-title">Auth Service</h4>
+            <p class="service-card-desc">Enterprise JWT verification, role-based access control (RBAC), and session credential governance.</p>
+            <div class="service-card-meta">
+              <span>Tokens: 256 active</span>
+              <span style="color: #60a5fa;">HS256 Auth</span>
+            </div>
+          </div>
+
+          <!-- Order -->
+          <div class="service-mesh-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge">PORT 8081</div>
+              <span class="service-status-pill status-up">HEALTHY</span>
+            </div>
+            <h4 class="service-card-title">Order Service</h4>
+            <p class="service-card-desc">Transaction orchestration, distributed saga coordination, and multi-service order lifecycle dispatcher.</p>
+            <div class="service-card-meta">
+              <span>Saga Pattern</span>
+              <span style="color: #60a5fa;">Calls: Pay &bull; Inv</span>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="service-mesh-card target-sre-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #f59e0b;">PORT 8082</div>
+              <span class="service-status-pill status-target">SRE TARGET</span>
+            </div>
+            <h4 class="service-card-title">Payment Service</h4>
+            <p class="service-card-desc">Stripe / payment gateway processing with connection pool resource governance and automated self-healing safeguards.</p>
+            <div class="service-card-meta">
+              <span>Pool: 10 max conns</span>
+              <span style="color: #f59e0b;">Chaos: DB Exhaustion</span>
+            </div>
+          </div>
+
+          <!-- Inventory -->
+          <div class="service-mesh-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge">PORT 8083</div>
+              <span class="service-status-pill status-up">HEALTHY</span>
+            </div>
+            <h4 class="service-card-title">Inventory Service</h4>
+            <p class="service-card-desc">Stock reservation, product catalog indexing, and atomic inventory lock management under high concurrency.</p>
+            <div class="service-card-meta">
+              <span>Items: 1,000 in-stock</span>
+              <span style="color: #60a5fa;">ACID Locking</span>
+            </div>
+          </div>
+
+          <!-- Notification -->
+          <div class="service-mesh-card">
+            <div class="mesh-card-header">
+              <div class="service-chip-badge">PORT 8085</div>
+              <span class="service-status-pill status-up">HEALTHY</span>
+            </div>
+            <h4 class="service-card-title">Notification Service</h4>
+            <p class="service-card-desc">Asynchronous event dispatch, Slack webhooks, email alerts, and dead letter queue error recovery.</p>
+            <div class="service-card-meta">
+              <span>Queue: 0 pending</span>
+              <span style="color: #60a5fa;">Slack Webhooks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Outage Testing Banner -->
+        <div class="interactive-demo-card">
+          <div class="demo-card-content">
+            <div class="demo-badge">LIVE CLUSTER CONTROLLER</div>
+            <h3 class="demo-title">Test Cascading Outage &amp; Autonomous Recovery</h3>
+            <p class="demo-desc">
+              Trigger a realistic DB connection pool exhaustion in Payment Service and watch TraceHeal detect the failure, isolate root cause, synthesize an AST patch, test it in sandbox, and recover in 8.4 seconds.
+            </p>
+          </div>
+          <div class="demo-card-action">
+            <button class="btn-hackyard-pill-primary" onclick="launchCommandCenter('demohub')">
+              <span>Open Chaos &amp; Demo Hub</span>
+              <span class="cta-arrow">&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Team Showcase Card -->
+      <section class="hackyard-team-section" id="teamSection">
+        <div class="hackyard-depth-card">
+          <div class="hackyard-depth-header">
+            <div>
+              <div style="font-size: 11px; font-family: var(--font-mono); color: #60a5fa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">
+                Hackyard Build 2026 &bull; In-Person Hackathon Track
+              </div>
+              <h2 class="hackyard-team-name">Team: Bites and Bytes</h2>
+              <div class="hackyard-team-event">📍 Physical Build: 24–25 Oct 2026 &bull; IIT Guwahati, Assam, India</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="hackyard-badge-pill" style="background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.3); color: #34d399;">
+                VERIFIED BUILDERS
+              </span>
+              <span class="hackyard-badge-pill">PROJECT: TRACEHEAL</span>
+            </div>
+          </div>
+
+          <div class="builders-grid">
+            <!-- Builder 1: Harsh Deep Chak -->
+            <div class="builder-profile-card">
+              <div class="builder-avatar avatar-harsh">HC</div>
+              <div class="builder-info-col">
+                <div class="builder-name-row">
+                  <span class="builder-name">Harsh Deep Chak</span>
+                  <span class="builder-verified-tag">Builder #042</span>
+                </div>
+                <div class="builder-role">Lead Systems Architect &amp; Core Developer</div>
+                <p class="builder-desc">
+                  Architected the 6-tier distributed microservice mesh, real-time OpenTelemetry span buffer, sliding-window anomaly daemon, and the autonomous SRE command center.
+                </p>
+                <div class="builder-tags">
+                  <span class="builder-tag-item">Distributed Systems</span>
+                  <span class="builder-tag-item">FastAPI Mesh</span>
+                  <span class="builder-tag-item">OpenTelemetry</span>
+                  <span class="builder-tag-item">SRE Ops</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Builder 2: Pallak Devi -->
+            <div class="builder-profile-card">
+              <div class="builder-avatar avatar-pallak">PD</div>
+              <div class="builder-info-col">
+                <div class="builder-name-row">
+                  <span class="builder-name">Pallak Devi</span>
+                  <span class="builder-verified-tag">Builder #043</span>
+                </div>
+                <div class="builder-role">AI/ML Systems &amp; Reliability Governance Engineer</div>
+                <p class="builder-desc">
+                  Engineered the Root Cause Analysis (RCA) agent, deterministic AST Python policy guardrails, isolated child-process shadow sandbox, and automated PR generator.
+                </p>
+                <div class="builder-tags">
+                  <span class="builder-tag-item">RCA Agent</span>
+                  <span class="builder-tag-item">AST Policy Engine</span>
+                  <span class="builder-tag-item">Process Sandbox</span>
+                  <span class="builder-tag-item">PR Automation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Bottom Launchpad Banner -->
+      <section class="hackyard-bottom-cta" id="ctaBanner">
+        <h2 class="bottom-cta-title">Ready to Experience TraceHeal in Action?</h2>
+        <p class="bottom-cta-desc">
+          Inspect the live 6-tier microservice cluster, inject faults via BiteRush Express, and watch the 7-phase autonomous healing cycle resolve cascading outages in real time.
+        </p>
+        <button class="btn-hackyard-pill-primary btn-hero-lg" onclick="launchCommandCenter('overview')">
+          ⚡ Enter TraceHeal SRE Command Center <span style="font-size: 16px;">➔</span>
+        </button>
+      </section>
+
+      <!-- Section 6: Professional Footer -->
+      <footer class="traceheal-footer">
+        <div class="footer-inner">
+          <div class="footer-left">
+            <div class="footer-brand">
+              <span class="footer-brand-title">Trace<span style="color: #60a5fa;">Heal</span><span style="color: #38bdf8;">.</span></span>
+              <span class="footer-brand-desc">Autonomous Reliability &bull; Intelligent Recovery</span>
+            </div>
+            <p class="footer-attribution">
+              Built for <strong>Hackyard Build 2026 @ IIT Guwahati</strong> by <strong>Team Bites and Bytes</strong> (Harsh Deep Chak &amp; Pallak Devi).
+            </p>
+          </div>
+          <div class="footer-right">
+            <a href="#overview" class="footer-link">Overview</a>
+            <a href="#howItWorks" class="footer-link">How It Works</a>
+            <a href="#architecture" class="footer-link">Architecture</a>
+            <a href="#teamSection" class="footer-link">Team</a>
+            <a href="javascript:void(0)" onclick="launchCommandCenter('overview')" class="footer-link" style="color: #60a5fa;">Command Center &rarr;</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Main Unified Application Shell -->
+  <div class="app-shell" id="appShell" style="display: none;">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-title">
+          <span>TraceHeal</span>
+          <span class="sidebar-brand-badge">SRE</span>
+        </div>
+      </div>
+
+      <!-- TraceHeal Home / Landing Page Card -->
+      <div class="sidebar-launchpad-card" onclick="returnToLanding()" title="Return to TraceHeal Landing Page">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="badge" style="background: rgba(37, 132, 245, 0.2); color: #72b4ff; font-size: 9px; font-weight: 700; border: 1px solid rgba(37, 132, 245, 0.4);">HACKYARD BUILD 2026</span>
+          <span style="font-size: 11px;">🚀</span>
+        </div>
+        <div style="font-size: 11px; font-weight: 700; color: #fff; margin-top: 4px;">Team: Bites and Bytes</div>
+        <div style="font-size: 10px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+          <span>Harsh Deep &amp; Pallak</span>
+          <span style="color: var(--accent); font-weight: 600;">TraceHeal Home &rarr;</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-nav-heading">Platform</div>
+        
+        <a class="nav-item active" data-nav="overview" onclick="navigateTo('overview')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Overview</span>
+          </div>
+        </a>
+
+        <a class="nav-item" data-nav="incidents" onclick="navigateTo('incidents')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span>Incidents</span>
+          </div>
+          <span class="nav-item-badge" id="sidebarIncidentCount">0</span>
+        </a>
+
+        <a class="nav-item" data-nav="services" onclick="navigateTo('services')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            <span>Topology &amp; Services</span>
+          </div>
+        </a>
+
+        <a class="nav-item" data-nav="traces" onclick="navigateTo('traces')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"></path>
+              <path d="M18 17V9"></path>
+              <path d="M13 17V5"></path>
+              <path d="M8 17v-3"></path>
+            </svg>
+            <span>Distributed Traces</span>
+          </div>
+        </a>
+
+        <div class="sidebar-nav-heading">Remediation</div>
+
+        <a class="nav-item" data-nav="investigation" onclick="navigateTo('investigation')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Investigation &amp; RCA</span>
+          </div>
+        </a>
+
+        <a class="nav-item" data-nav="sandbox" onclick="navigateTo('sandbox')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Sandbox &amp; Diff</span>
+          </div>
+          <span class="nav-item-badge">5/5 Safe</span>
+        </a>
+
+        <div class="sidebar-nav-heading">Operations</div>
+
+        <a class="nav-item" data-nav="demohub" onclick="navigateTo('demohub')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Demo Hub &amp; Chaos</span>
+          </div>
+          <span class="nav-item-badge" style="background: var(--accent); color: white;">3 Stores</span>
+        </a>
+
+        <a class="nav-item" data-nav="settings" onclick="navigateTo('settings')">
+          <div class="nav-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Settings</span>
+          </div>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-status">
+          <span class="status-indicator-dot" id="sidebarStatusDot"></span>
+          <span id="sidebarStatusLabel">Cluster Nominal</span>
+        </div>
+        <span style="font-family: var(--font-mono); font-size: 10px;">v1.0.0</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="btn btn-secondary btn-xs" id="btnBackToLanding" onclick="returnToLanding()" title="Return to Hackyard Builder Launchpad" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; background: rgba(37,132,245,0.15); border: 1px solid rgba(37,132,245,0.4); color: #72b4ff; padding: 4px 10px; border-radius: 6px; margin-right: 12px; cursor: pointer;">
+            <span>←</span>
+            <span>Hackyard Launchpad</span>
+          </button>
+          <div class="header-page-title">
+            <span>SRE Command Center</span>
+            <span class="header-env-pill">Production • 6 Tiers</span>
+          </div>
+          <div class="header-status-badge" id="headerStatusBadge">
+            <span class="status-indicator-dot"></span>
+            <span id="headerStatusText">All Services Nominal</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Connection Status -->
+          <div class="sse-badge" id="sseContainer">
+            <span class="sse-dot" id="sseStatusDot"></span>
+            <span id="sseStatusText">Connected</span>
+            <span id="ssePingCount" style="opacity: 0.6;">0 PINGS</span>
+          </div>
+
+          <!-- Audio FX Toggle -->
+          <button class="btn btn-ghost btn-sm" id="btnAudioToggle" title="Toggle audio chime" onclick="toggleAudio()">
+            <span id="audioIcon">🔊</span>
+            <span id="audioLabel" class="sr-only">Sound ON</span>
+          </button>
+
+          <!-- Safe Test Anomaly Trigger -->
+          <button class="btn btn-secondary btn-sm" id="btnSimulateIncident" title="Inject safe test anomaly without auto-healing">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>🚨 Simulate Incident</span>
+          </button>
+
+          <!-- Autonomous Healing Shortcut -->
+          <button class="btn btn-primary btn-sm" id="btnAutoHealCycle" title="Run verified autonomous self-healing cycle">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            <span>⚡ Auto-Heal (7-Step)</span>
+          </button>
+
+          <!-- Reset Baseline -->
+          <button class="btn btn-ghost btn-sm" id="btnResetChaos" title="Restore all services to nominal baseline">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+            </svg>
+            <span>↺ Reset Cluster</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable View Content -->
+      <div class="app-content">
+
+        <!-- ================================================================ -->
+        <!-- VIEW 1: OVERVIEW                                                -->
+        <!-- ================================================================ -->
+        <section class="view-pane active" id="view-overview">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Overview</h1>
+              <p class="view-header-desc">
+                High-level operational health, telemetry SLO compliance, and active incident response status across the distributed microservice mesh.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-secondary btn-sm" onclick="refreshDashboardData()">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                </svg>
+                <span>Refresh</span>
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="navigateTo('investigation')">
+                <span>Go to Active Investigation →</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Compact KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-title">Service Health</span>
+                <span class="kpi-badge success" id="kpiServiceHealthBadge">6/6 Healthy</span>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="metricClusterHealth">100%</span>
+                <span class="kpi-unit">operational</span>
+              </div>
+              <div class="kpi-footer">
+                <span class="status-indicator-dot" id="kpiServiceHealthDot"></span>
+                <span id="kpiServiceHealthSub">All microservices within SLO</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-title">Active Incidents</span>
+                <span class="kpi-badge" id="metricActiveStatusPill">NOMINAL</span>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="metricActiveIncidents">0</span>
+                <span class="kpi-unit">unresolved</span>
+              </div>
+              <div class="kpi-footer" id="metricIncidentSubtitle">
+                <span class="status-indicator-dot"></span>
+                <span>Zero blocking alerts</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-title">Cluster Error Rate</span>
+                <span class="kpi-badge success">Target &lt; 0.1%</span>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="metricErrorRate">0.00%</span>
+                <span class="kpi-unit">HTTP 5xx</span>
+              </div>
+              <div class="kpi-footer">
+                <span class="status-indicator-dot"></span>
+                <span>Telemetry sliding window nominal</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-title">Availability / SLO</span>
+                <span class="kpi-badge success">SLO: 99.9%</span>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value">99.98%</span>
+                <span class="kpi-unit">30-day uptime</span>
+              </div>
+              <div class="kpi-footer">
+                <span class="status-indicator-dot"></span>
+                <span>AST &amp; Deadlock Safety Gates active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Quick-Launch Hub -->
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;">
+              Core Capabilities &amp; Live Scenarios (1-Click Access)
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px;">
+              <div class="card" onclick="navigateTo('demohub')" style="cursor: pointer; padding: 14px; border: 1px solid var(--accent); background: rgba(59, 130, 246, 0.05); transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 22px; margin-bottom: 6px;">🍕 ➔ ⚠️</div>
+                  <strong style="color: var(--text-primary); font-size: 13px; display: block;">1. Storefront &amp; Chaos Lab</strong>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px;">BiteRush, ApexMart &amp; FlashDrop live checkout failures.</p>
+                </div>
+                <span style="font-size: 11px; color: var(--accent); font-weight: 600;">Launch Storefronts →</span>
+              </div>
+
+              <div class="card" onclick="navigateTo('services')" style="cursor: pointer; padding: 14px; border: 1px solid var(--border); transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 22px; margin-bottom: 6px;">🕸️</div>
+                  <strong style="color: var(--text-primary); font-size: 13px; display: block;">2. Live Topology Mesh</strong>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px;">Interactive SVG 6-tier network graph &amp; latency pings.</p>
+                </div>
+                <span style="font-size: 11px; color: var(--accent); font-weight: 600;">View Topology Graph →</span>
+              </div>
+
+              <div class="card" onclick="navigateTo('investigation')" style="cursor: pointer; padding: 14px; border: 1px solid var(--border); transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 22px; margin-bottom: 6px;">🔬</div>
+                  <strong style="color: var(--text-primary); font-size: 13px; display: block;">3. 7-Phase RCA &amp; Traces</strong>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px;">Correlated trace waterfall, DAG causal path &amp; operator actions.</p>
+                </div>
+                <span style="font-size: 11px; color: var(--accent); font-weight: 600;">Open Investigation →</span>
+              </div>
+
+              <div class="card" onclick="navigateTo('sandbox')" style="cursor: pointer; padding: 14px; border: 1px solid var(--border); transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 22px; margin-bottom: 6px;">🛡️</div>
+                  <strong style="color: var(--text-primary); font-size: 13px; display: block;">4. Sandbox &amp; AST Diff</strong>
+                  <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px;">5/5 Policy guardrails, unified diff patch &amp; shadow benchmarks.</p>
+                </div>
+                <span style="font-size: 11px; color: var(--accent); font-weight: 600;">Inspect Safe Patch →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Balanced Two-Column Layout -->
+          <div class="col-left-wide">
+            
+            <!-- Left: Active Incidents List -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-title">Active Incidents</span>
+                  <span class="badge badge-neutral" id="overviewIncidentBadge">0 Active</span>
+                </div>
+                <button class="btn btn-ghost btn-xs" onclick="navigateTo('incidents')">View All Incidents →</button>
+              </div>
+              <div class="card-body no-padding" id="overviewIncidentsList">
+                <div style="padding: 32px; text-align: center; color: var(--text-muted);">
+                  <div style="font-size: 20px; margin-bottom: 6px;">✓</div>
+                  <div style="font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">All Microservices Nominal</div>
+                  <div style="font-size: 12px;">No active incidents detected. Telemetry pipelines and SLOs healthy.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Service Health Summary -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-title">Service Health Summary</span>
+                  <span class="badge badge-success">6 Nodes</span>
+                </div>
+                <button class="btn btn-ghost btn-xs" onclick="navigateTo('services')">Open Mesh →</button>
+              </div>
+              <div class="card-body no-padding">
+                <table class="service-health-table">
+                  <thead>
+                    <tr>
+                      <th>Service</th>
+                      <th>Port</th>
+                      <th>Latency</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewServicesTable">
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-gateway-service"></span> gateway-service</div></td>
+                      <td>8080</td>
+                      <td id="lat-gateway-service">8ms</td>
+                      <td><span class="badge badge-success">Healthy</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-order-service"></span> order-service</div></td>
+                      <td>8081</td>
+                      <td id="lat-order-service">15ms</td>
+                      <td><span class="badge badge-success">Healthy</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-payment-service"></span> payment-service</div></td>
+                      <td>8082</td>
+                      <td id="lat-payment-service">22ms</td>
+                      <td><span class="badge badge-success" id="badge-payment-service">Healthy</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-inventory-service"></span> inventory-service</div></td>
+                      <td>8083</td>
+                      <td id="lat-inventory-service">14ms</td>
+                      <td><span class="badge badge-success">Healthy</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-auth-service"></span> auth-service</div></td>
+                      <td>8084</td>
+                      <td id="lat-auth-service">4ms</td>
+                      <td><span class="badge badge-success">Healthy</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="service-name-cell"><span class="service-dot" id="dot-notification-service"></span> notification-service</div></td>
+                      <td>8085</td>
+                      <td id="lat-notification-service">9ms</td>
+                      <td><span class="badge badge-success">Healthy</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom: Recent Activity & Agent Stream Timeline -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-title">Recent Activity &amp; Cognitive Agent Timeline</span>
+                <span class="badge badge-info">Live Stream</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-ghost btn-xs" onclick="copyTerminalText()">Copy Logs</button>
+                <button class="btn btn-ghost btn-xs" id="btnClearTerminal">Clear</button>
+              </div>
+            </div>
+            <div class="card-body no-padding">
+              <div class="terminal-body" id="terminalBody" style="height: 180px;">
+                <div class="terminal-line" data-category="action">
+                  <span class="term-timestamp">SYSTEM</span>
+                  <span class="term-category action">INIT</span>
+                  <span class="term-msg">TraceHeal Autonomous Observation Loop Active. Monitoring 6 microservice mesh endpoints...</span>
+                </div>
+                <div class="terminal-line" data-category="thought">
+                  <span class="term-timestamp">AGENT</span>
+                  <span class="term-category thought">THOUGHT</span>
+                  <span class="term-msg">[RCADiagnosticAgent] Baseline telemetry nominal (&lt; 0.05% error rate, p95: 18ms). W3C Context active.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 2: INCIDENTS MANAGEMENT                                     -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-incidents">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Incident Management</h1>
+              <p class="view-header-desc">
+                Single source of truth for detected anomalies, root-cause investigations, and verified remediations.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-secondary btn-sm" onclick="loadIncidents()">Refresh Queue</button>
+            </div>
+          </div>
+
+          <!-- Filter Toolbar -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <button class="filter-btn active" data-filter="all" onclick="filterIncidentsTab('all')">All Incidents</button>
+              <button class="filter-btn" data-filter="active" onclick="filterIncidentsTab('active')">Active</button>
+              <button class="filter-btn" data-filter="investigating" onclick="filterIncidentsTab('investigating')">Investigating</button>
+              <button class="filter-btn" data-filter="resolved" onclick="filterIncidentsTab('resolved')">Resolved</button>
+              <button class="filter-btn" data-filter="closed" onclick="filterIncidentsTab('closed')">Closed</button>
+            </div>
+            <div class="filter-group">
+              <input type="text" class="input-text" id="incidentSearchInput" placeholder="Filter by service or title..." oninput="handleIncidentSearch(this.value)" style="width: 220px;">
+            </div>
+          </div>
+
+          <!-- Incidents List Container -->
+          <div class="card">
+            <div class="card-body no-padding" id="incidentListContainer">
+              <!-- Rendered dynamically via app.js -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 3: SERVICES & TOPOLOGY                                      -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-services">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Services Topology</h1>
+              <p class="view-header-desc">
+                Interactive distributed dependency mesh with real-time latency heatmapping, link propagation, and node health.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-secondary btn-sm" onclick="if(topology) topology.resetAll()">Reset Mesh Layout</button>
+            </div>
+          </div>
+
+          <div class="topology-container">
+            <!-- Left: Interactive Topology Canvas -->
+            <div class="topology-canvas-wrapper">
+              <div class="topology-canvas-container" id="topologyCanvas"></div>
+            </div>
+
+            <!-- Right: Selected Node Vitals & Controls -->
+            <div class="node-inspector-card" id="nodeInspector">
+              <div class="node-title-row">
+                <h3 id="inspectorNodeTitle">payment-service</h3>
+                <span class="badge badge-info" id="inspectorPortTag">PORT 8082</span>
+              </div>
+
+              <div class="node-stats-grid">
+                <div class="node-stat-item">
+                  <div class="node-stat-label">Health Status</div>
+                  <div class="node-stat-value" id="insStatus" style="color: var(--success);">HEALTHY</div>
+                </div>
+                <div class="node-stat-item">
+                  <div class="node-stat-label">p95 Latency</div>
+                  <div class="node-stat-value" id="insLatency">22ms</div>
+                </div>
+                <div class="node-stat-item">
+                  <div class="node-stat-label">Error Rate</div>
+                  <div class="node-stat-value" id="insErrorRate">0.0%</div>
+                </div>
+                <div class="node-stat-item">
+                  <div class="node-stat-label">Isolation Mode</div>
+                  <div class="node-stat-value" id="insIsolation">PID Sandbox</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="btn btn-secondary btn-sm" onclick="testNodeEndpoint()" style="flex: 1;">Ping /health</button>
+                <button class="btn btn-danger btn-sm" onclick="injectChaosOnSelected()" style="flex: 1;">Inject Test Fault</button>
+              </div>
+
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">ALL CLUSTER NODES</div>
+                <div class="service-cards-stack">
+                  <div class="service-vitals-card" id="card-gateway-service" onclick="selectServiceCard('gateway-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-gateway-service"></span> gateway-service</div>
+                      <span class="badge badge-neutral">PORT 8080</span>
+                    </div>
+                  </div>
+                  <div class="service-vitals-card" id="card-order-service" onclick="selectServiceCard('order-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-order-service"></span> order-service</div>
+                      <span class="badge badge-neutral">PORT 8081</span>
+                    </div>
+                  </div>
+                  <div class="service-vitals-card selected" id="card-payment-service" onclick="selectServiceCard('payment-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-payment-service"></span> payment-service</div>
+                      <span class="badge badge-neutral">PORT 8082</span>
+                    </div>
+                  </div>
+                  <div class="service-vitals-card" id="card-inventory-service" onclick="selectServiceCard('inventory-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-inventory-service"></span> inventory-service</div>
+                      <span class="badge badge-neutral">PORT 8083</span>
+                    </div>
+                  </div>
+                  <div class="service-vitals-card" id="card-auth-service" onclick="selectServiceCard('auth-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-auth-service"></span> auth-service</div>
+                      <span class="badge badge-neutral">PORT 8084</span>
+                    </div>
+                  </div>
+                  <div class="service-vitals-card" id="card-notification-service" onclick="selectServiceCard('notification-service')">
+                    <div class="service-card-top">
+                      <div class="service-name-row"><span class="service-dot" id="dot-s-notification-service"></span> notification-service</div>
+                      <span class="badge badge-neutral">PORT 8085</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 4: DISTRIBUTED TRACES                                       -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-traces">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Distributed Trace Explorer</h1>
+              <p class="view-header-desc">
+                W3C distributed trace context propagation (RFC traceparent) showing span hierarchy, execution timelines, and error origins.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <select id="tracesTabSelector" class="cyber-select" onchange="loadTraceForTab(this.value)" style="min-width: 240px;">
+                <option value="">Loading recent traces...</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" onclick="refreshTracesTab()">Refresh Traces</button>
+            </div>
+          </div>
+
+          <div class="trace-waterfall-panel">
+            <div class="trace-ruler" id="tabTraceRuler">
+              <span>0ms</span><span>25%</span><span>50%</span><span>75%</span><span id="tabTraceMaxTime">100ms</span>
+            </div>
+            <div class="trace-spans-container" id="tabTraceSpansContainer">
+              <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                Select a trace from the selector above to inspect OpenTelemetry execution spans.
+              </div>
+            </div>
+            <!-- Span Details Drawer -->
+            <div class="trace-inspector-drawer" id="tabSpanDrawer" style="display:none;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong id="tabSpanDrawerTitle" style="color: var(--accent);">Span Details</strong>
+                <button class="btn btn-ghost btn-sm" onclick="closeSpanDrawer('tabSpanDrawer')">Close</button>
+              </div>
+              <div id="tabSpanDrawerContent"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 5: INVESTIGATION DOSSIER                                    -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-investigation">
+          <!-- Active Storefront Context Banner -->
+          <div id="storefrontInvestigationBanner" class="investigation-context-banner" style="display: none;"></div>
+
+          <div class="view-header">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h1 class="view-header-title" id="dossierIncidentTitle">Select or Simulate an Incident</h1>
+                <span class="badge badge-critical" id="dossierSeverity">CRITICAL</span>
+              </div>
+              <p class="view-header-desc">
+                <span>Incident ID: <code id="dossierIncidentId" class="code-id">--</code></span> •
+                <span>Suspect Service: <strong id="dossierSuspectService" style="color: var(--accent);">payment-service</strong></span> •
+                <span id="dossierTimeAgo">Just now</span>
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary btn-sm" id="btnAutoHealIncidentDirect" onclick="autoHealActiveIncident()">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                <span>Execute Autonomous Fix</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 7-Phase Electrical Stepper -->
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-header">
+              <span class="card-title">Closed-Loop Self-Healing Lifecycle Progression</span>
+              <span id="stepperStageProgress" style="font-family: var(--font-mono); font-size: 11px; color: var(--accent);">Stage 1 of 7</span>
+            </div>
+            <div class="card-body">
+              <div class="stepper-container" id="lifecycleStepper">
+                <!-- Populated dynamically via app.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnostic & Evidence Grid -->
+          <div class="two-col-grid">
+            
+            <!-- Root Cause Analysis -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-title">Root Cause Diagnostic &amp; Evidence</span>
+                  <span class="badge badge-info">Causal Inference</span>
+                </div>
+              </div>
+              <div class="card-body" id="dossierHypothesisDetails">
+                <div style="color: var(--text-muted); font-size: 12px; padding: 16px; text-align: center;">
+                  Run RCA Agent or execute Auto-Heal to trigger diagnostic analysis.
+                </div>
+              </div>
+            </div>
+
+            <!-- Safety Guardrail Policies -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-title">Shadow Safety Policy Guardrails</span>
+                  <span class="badge badge-success">5/5 Verified</span>
+                </div>
+              </div>
+              <div class="card-body" id="dossierPolicyDetails">
+                <div class="policy-list">
+                  <div class="policy-item">
+                    <span>1. AST Syntax &amp; Whitelist</span>
+                    <span class="policy-badge pass">PASS</span>
+                  </div>
+                  <div class="policy-item">
+                    <span>2. Resource Quotas &amp; Allocation</span>
+                    <span class="policy-badge pass">PASS</span>
+                  </div>
+                  <div class="policy-item">
+                    <span>3. Deadlock &amp; Race Hazard Guard</span>
+                    <span class="policy-badge pass">PASS</span>
+                  </div>
+                  <div class="policy-item">
+                    <span>4. Idempotency &amp; Retry Safety</span>
+                    <span class="policy-badge pass">PASS</span>
+                  </div>
+                  <div class="policy-item">
+                    <span>5. Security Boundary &amp; Whitelist</span>
+                    <span class="policy-badge pass">PASS</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Correlated Distributed Trace -->
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-title">Correlated Distributed Trace Flamegraph</span>
+                <span class="badge badge-neutral" id="dossierTraceIdBadge">Trace: --</span>
+              </div>
+              <button class="btn btn-ghost btn-xs" onclick="loadTraceForActiveIncident()">Reload Spans</button>
+            </div>
+            <div class="card-body no-padding">
+              <div class="trace-ruler" id="dossierTraceRuler">
+                <span>0ms</span><span>25%</span><span>50%</span><span>75%</span><span id="dossierTraceMaxTime">100ms</span>
+              </div>
+              <div class="trace-spans-container" id="dossierTraceSpansContainer" style="max-height: 220px;">
+                <div style="padding: 24px; text-align: center; color: var(--text-muted);">
+                  Select an incident to view distributed trace execution waterfall.
+                </div>
+              </div>
+              <div class="trace-inspector-drawer" id="dossierSpanDrawer" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <strong id="dossierSpanDrawerTitle" style="color: var(--accent);">Span Details</strong>
+                  <button class="btn btn-ghost btn-sm" onclick="closeSpanDrawer('dossierSpanDrawer')">Close</button>
+                </div>
+                <div id="dossierSpanDrawerContent"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SRE Operator Step-by-Step Action Console -->
+          <div class="action-toolbar">
+            <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">
+              SRE STEP-BY-STEP RECOVERY:
+            </span>
+            <div class="action-steps-group">
+              <button class="action-step-btn" id="btnTriggerRca">
+                <span>1. Run RCA Agent</span>
+              </button>
+              <button class="action-step-btn" id="btnProposePatch">
+                <span>2. Propose Safe Patch</span>
+              </button>
+              <button class="action-step-btn" id="btnVerifySandbox">
+                <span>3. Verify in Sandbox</span>
+              </button>
+              <button class="action-step-btn" id="btnDeployCanary">
+                <span>4. Deploy Canary (10%)</span>
+              </button>
+              <button class="action-step-btn" id="btnResolveIncident">
+                <span>5. Validate &amp; Resolve</span>
+              </button>
+              <button class="action-step-btn" id="btnCloseIncident">
+                <span>6. Close Incident</span>
+              </button>
+              <button class="action-step-btn" id="btnViewPostmortem">
+                <span>Postmortem &amp; PR Dossier</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 6: SHADOW SANDBOX & DIFF                                    -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-sandbox">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Shadow Sandbox &amp; Verification</h1>
+              <p class="view-header-desc">
+                Isolated child process sandbox running on port 9100. Reproduces root-cause hypotheses with zero production blast radius.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <span class="badge badge-success">PID ISOLATED</span>
+            </div>
+          </div>
+
+          <div class="two-col-grid">
+            
+            <!-- Left: IDE-Grade Unified Diff -->
+            <div class="diff-viewer-card" id="diffViewerCard">
+              <div class="diff-header">
+                <div class="diff-file-tag">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                  </svg>
+                  <span id="diffTargetFile">target_services/payment_service.py</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-secondary btn-xs" id="btnCopyDiff" onclick="copyDiffPatch()">Copy Diff</button>
+                  <a href="#" class="btn btn-secondary btn-xs" id="btnDownloadPatch" download="traceheal.patch" target="_blank">Download .patch</a>
+                </div>
+              </div>
+              <div class="diff-body" id="diffBodyContainer">
+                <div class="diff-line context"><span class="diff-line-num">65</span><span class="diff-line-content"># Database Connection Pool Configuration</span></div>
+                <div class="diff-line context"><span class="diff-line-num">66</span><span class="diff-line-content">class PaymentDBPool:</span></div>
+                <div class="diff-line deletion"><span class="diff-line-num">67</span><span class="diff-line-content">-     DB_POOL_MAX_CONNECTIONS = 2</span></div>
+                <div class="diff-line deletion"><span class="diff-line-num">68</span><span class="diff-line-content">-     DB_POOL_ACQUIRE_TIMEOUT_SEC = 0.1</span></div>
+                <div class="diff-line deletion"><span class="diff-line-num">69</span><span class="diff-line-content">-     HOLD_DURATION_SEC = 0.40</span></div>
+                <div class="diff-line addition"><span class="diff-line-num">67</span><span class="diff-line-content">+     DB_POOL_MAX_CONNECTIONS = 15  # Expanded capacity baseline</span></div>
+                <div class="diff-line addition"><span class="diff-line-num">68</span><span class="diff-line-content">+     DB_POOL_ACQUIRE_TIMEOUT_SEC = 0.5  # High-traffic grace window</span></div>
+                <div class="diff-line addition"><span class="diff-line-num">69</span><span class="diff-line-content">+     HOLD_DURATION_SEC = 0.05  # Optimized transaction hold duration</span></div>
+              </div>
+            </div>
+
+            <!-- Right: Policy Guardrails & Benchmark -->
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Policy Engine Verification (5/5 Gates)</span>
+                  <span class="badge badge-success">AST Validated</span>
+                </div>
+                <div class="card-body">
+                  <div class="policy-list">
+                    <div class="policy-item" onclick="togglePolicyDetail('p1')">
+                      <div>
+                        <strong>1. AST &amp; Syntax Verification</strong>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="p1-detail">0 syntax errors and valid grammar tokens.</div>
+                      </div>
+                      <span class="policy-badge pass">PASS</span>
+                    </div>
+                    <div class="policy-item" onclick="togglePolicyDetail('p2')">
+                      <div>
+                        <strong>2. Resource Quotas &amp; Allocation</strong>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="p2-detail">Connection count below memory quota limit.</div>
+                      </div>
+                      <span class="policy-badge pass">PASS</span>
+                    </div>
+                    <div class="policy-item" onclick="togglePolicyDetail('p3')">
+                      <div>
+                        <strong>3. Deadlock &amp; Race Hazard Guard</strong>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="p3-detail">Static analyzer verified absence of circular locks.</div>
+                      </div>
+                      <span class="policy-badge pass">PASS</span>
+                    </div>
+                    <div class="policy-item" onclick="togglePolicyDetail('p4')">
+                      <div>
+                        <strong>4. Idempotency &amp; Retry Safety</strong>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="p4-detail">No non-idempotent state mutations introduced.</div>
+                      </div>
+                      <span class="policy-badge pass">PASS</span>
+                    </div>
+                    <div class="policy-item" onclick="togglePolicyDetail('p5')">
+                      <div>
+                        <strong>5. Security Boundary &amp; Whitelist</strong>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="p5-detail">No eval, exec, or unvetted external calls.</div>
+                      </div>
+                      <span class="policy-badge pass">PASS</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benchmark Comparison Card -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Shadow Sandbox Benchmark</span>
+                  <span class="badge badge-success">98.5% Improvement</span>
+                </div>
+                <div class="card-body">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+                    <span style="color: var(--critical);">Baseline (Faulty):</span>
+                    <strong style="color: var(--critical);">100% Fail / 2,480ms</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span style="color: var(--success);">Patched (Sandbox):</span>
+                    <strong style="color: var(--success);">0.0% Fail / 38ms</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 7: DEMO HUB & CHAOS LAB                                     -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-demohub">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Demo Hub &amp; Chaos Laboratory</h1>
+              <p class="view-header-desc">
+                Interactive production-grade storefront environments. Inject controlled chaos to evaluate TraceHeal's autonomous self-healing.
+              </p>
+            </div>
+            <div class="view-header-actions">
+              <!-- Continuous Traffic Widget -->
+              <div style="display: flex; align-items: center; gap: 8px; background: var(--surface); padding: 4px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);" id="trafficControlWidget">
+                <span class="service-dot" id="trafficDot"></span>
+                <span id="trafficText" style="font-size: 11px; font-weight: 600;">TRAFFIC: OFF</span>
+                <select id="trafficRateSelect" class="cyber-select" style="padding: 1px 4px; font-size: 11px;">
+                  <option value="2.0">2 RPS</option>
+                  <option value="5.0">5 RPS</option>
+                  <option value="10.0">10 RPS</option>
+                </select>
+                <button class="btn btn-secondary btn-xs" id="btnToggleTraffic">Start</button>
+                <span id="trafficStatsPill" style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">0 reqs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Storefront Simulators Grid -->
+          <div class="demohub-grid">
+            <div class="demohub-card">
+              <div>
+                <span class="demohub-card-icon">🍕</span>
+                <h3 class="demohub-card-title">BiteRush Express</h3>
+                <p class="demohub-card-desc">Food delivery platform with restaurant cart checkout and payment gateway.</p>
+                <div class="card-mesh-route">gateway (8080) ➔ order (8081) ➔ payment (8082)</div>
+                <div class="card-fault-highlight">
+                  <span>Simulated Anomaly:</span>
+                  <strong>PostgreSQL Connection Pool Exhaustion</strong>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="DemoStoreEngine.openStore('food')">
+                Launch BiteRush Storefront →
+              </button>
+            </div>
+
+            <div class="demohub-card">
+              <div>
+                <span class="demohub-card-icon">🎧</span>
+                <h3 class="demohub-card-title">ApexMart Electronics</h3>
+                <p class="demohub-card-desc">Tech gear storefront with product catalog browsing and inventory reservations.</p>
+                <div class="card-mesh-route">gateway (8080) ➔ order (8081) ➔ inventory (8083)</div>
+                <div class="card-fault-highlight">
+                  <span>Simulated Anomaly:</span>
+                  <strong>Cascading Inventory Latency Spike (+2.5s)</strong>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="DemoStoreEngine.openStore('ecommerce')">
+                Launch ApexMart Storefront →
+              </button>
+            </div>
+
+            <div class="demohub-card">
+              <div>
+                <span class="demohub-card-icon">⚡</span>
+                <h3 class="demohub-card-title">FlashDrop 10-Min</h3>
+                <p class="demohub-card-desc">Dark store quick commerce grocery with delivery countdowns.</p>
+                <div class="card-mesh-route">gateway (8080) ➔ order (8081) ➔ payment (8082)</div>
+                <div class="card-fault-highlight">
+                  <span>Simulated Anomaly:</span>
+                  <strong>Concurrency Deadlock &amp; Mutex Contention</strong>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="DemoStoreEngine.openStore('quickcommerce')">
+                Launch FlashDrop Storefront →
+              </button>
+            </div>
+          </div>
+
+          <!-- Chaos Injection Buttons Section -->
+          <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+              <span class="card-title">Deterministic Chaos Fault Injection Buttons</span>
+              <span class="badge badge-warning">Testing Only</span>
+            </div>
+            <div class="card-body">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">DB Pool Exhaustion</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">payment-service (8082)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="DB_POOL_EXHAUSTION" data-target="payment-service">Inject Pool Exhaustion</button>
+                </div>
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Latency Spike (+2.5s)</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">payment-service (8082)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="LATENCY_SPIKE" data-target="payment-service">Inject Latency Spike</button>
+                </div>
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Inventory Outage (500)</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">inventory-service (8083)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="INVENTORY_OUTAGE" data-target="inventory-service">Inject Inventory Outage</button>
+                </div>
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Concurrency Deadlock</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">payment-service (8082)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="DEADLOCK" data-target="payment-service">Inject Deadlock</button>
+                </div>
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">Token Rotation Desync</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">auth-service (8084)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="TOKEN_CASCADE" data-target="auth-service">Inject Auth Fault</button>
+                </div>
+                <div style="background: var(--background); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                  <div style="font-weight: 600; margin-bottom: 2px;">DLQ Queue Saturation</div>
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">notification-service (8085)</div>
+                  <button class="btn btn-danger btn-sm" data-chaos="QUEUE_SATURATION" data-target="notification-service">Inject Queue Saturation</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 8: STOREFRONT APPLICATION VIEW                              -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-storefront">
+          <div style="margin-bottom: 16px;">
+            <button class="btn btn-ghost btn-sm" onclick="navigateTo('demohub')">← Back to Demo Hub</button>
+          </div>
+
+          <!-- Food Storefront -->
+          <div class="store-container" id="store-food">
+            <div class="store-toolbar">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 700; font-size: 14px;">🍕 BiteRush Express</span>
+                <span class="badge badge-success" id="foodMeshStatusPill">NOMINAL</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-danger btn-sm" id="foodChaosToggleBtn" onclick="DemoStoreEngine.toggleStoreChaos('food')">⚡ Arm Anomaly (DB_POOL)</button>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('investigation')">Open Investigation Console →</button>
+              </div>
+            </div>
+            <div class="storefront-failure-banner" id="foodFailureAlert" style="display: none; padding: 10px; background: var(--critical-muted); color: var(--critical); border-radius: var(--radius-sm); margin-bottom: 12px;"></div>
+            <div class="store-grid">
+              <div id="foodRestaurantsList" class="store-catalog"></div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Shopping Cart</span><span class="badge badge-neutral" id="foodCartCount">0 items</span></div>
+                <div class="card-body">
+                  <div id="foodCartItems" style="min-height: 80px; margin-bottom: 12px;"></div>
+                  <div style="display: none;" id="foodCartSubtotal">$0.00</div>
+                  <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 14px;">
+                    <span>Total Due</span><span id="foodCartTotal">$0.00</span>
+                  </div>
+                  <button class="btn btn-primary" id="foodBtnCheckout" onclick="DemoStoreEngine.executeCheckout('food')" style="width: 100%;">Complete Order Checkout</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ecommerce Storefront -->
+          <div class="store-container" id="store-ecommerce" style="display: none;">
+            <div class="store-toolbar">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 700; font-size: 14px;">🎧 ApexMart Electronics</span>
+                <span class="badge badge-success" id="ecommerceMeshStatusPill">NOMINAL</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-danger btn-sm" id="ecommerceChaosToggleBtn" onclick="DemoStoreEngine.toggleStoreChaos('ecommerce')">⚡ Arm Anomaly (LATENCY_SPIKE)</button>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('investigation')">Open Investigation Console →</button>
+              </div>
+            </div>
+            <div class="storefront-failure-banner" id="ecommerceFailureAlert" style="display: none; padding: 10px; background: var(--critical-muted); color: var(--critical); border-radius: var(--radius-sm); margin-bottom: 12px;"></div>
+            <div class="store-grid">
+              <div id="ecommerceProductsGrid" class="store-catalog"></div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Shopping Cart</span><span class="badge badge-neutral" id="ecommerceCartCount">0 items</span></div>
+                <div class="card-body">
+                  <div id="ecommerceCartItems" style="min-height: 80px; margin-bottom: 12px;"></div>
+                  <div style="display: none;" id="ecommerceCartSubtotal">$0.00</div>
+                  <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 14px;">
+                    <span>Total Due</span><span id="ecommerceCartTotal">$0.00</span>
+                  </div>
+                  <button class="btn btn-primary" id="ecommerceBtnCheckout" onclick="DemoStoreEngine.executeCheckout('ecommerce')" style="width: 100%;">Complete Order Checkout</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Commerce Storefront -->
+          <div class="store-container" id="store-quickcommerce" style="display: none;">
+            <div class="store-toolbar">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 700; font-size: 14px;">⚡ FlashDrop 10-Min</span>
+                <span class="badge badge-success" id="quickcommerceMeshStatusPill">NOMINAL</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-danger btn-sm" id="quickcommerceChaosToggleBtn" onclick="DemoStoreEngine.toggleStoreChaos('quickcommerce')">⚡ Arm Anomaly (DEADLOCK)</button>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('investigation')">Open Investigation Console →</button>
+              </div>
+            </div>
+            <div class="storefront-failure-banner" id="quickcommerceFailureAlert" style="display: none; padding: 10px; background: var(--critical-muted); color: var(--critical); border-radius: var(--radius-sm); margin-bottom: 12px;"></div>
+            <div class="store-grid">
+              <div id="quickCommerceGrid" class="store-catalog"></div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">10-Minute Cart</span><span class="badge badge-neutral" id="quickcommerceCartCount">0 items</span></div>
+                <div class="card-body">
+                  <div id="quickcommerceCartItems" style="min-height: 80px; margin-bottom: 12px;"></div>
+                  <div style="display: none;" id="quickcommerceCartSubtotal">$0.00</div>
+                  <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 14px;">
+                    <span>Total Due</span><span id="quickcommerceCartTotal">$0.00</span>
+                  </div>
+                  <button class="btn btn-primary" id="quickcommerceBtnCheckout" onclick="DemoStoreEngine.executeCheckout('quickcommerce')" style="width: 100%;">Place 10-Min Order</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 9: SETTINGS                                                 -->
+        <!-- ================================================================ -->
+        <section class="view-pane" id="view-settings">
+          <div class="view-header">
+            <div>
+              <h1 class="view-header-title">Settings &amp; Configuration</h1>
+              <p class="view-header-desc">
+                Operational thresholds, sliding-window anomaly detection daemon settings, and cluster safeguards.
+              </p>
+            </div>
+          </div>
+
+          <div class="card" style="max-width: 680px;">
+            <div class="card-header">
+              <span class="card-title">Detection &amp; Notification Preferences</span>
+            </div>
+            <div class="card-body" style="display: flex; flex-direction: column; gap: 16px;">
+              <div>
+                <label style="display: block; font-weight: 600; margin-bottom: 4px;">Audio Chimes &amp; Alerts</label>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+                  Play subtle synthesizer chimes when autonomous healing completes or incidents are detected.
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="toggleAudio()">
+                  Toggle Audio (Current: <span id="settingsAudioStatus">ON</span>)
+                </button>
+              </div>
+
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 4px;">Sliding Window Anomaly Daemon</label>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+                  Window scan interval: <strong>3.0s</strong> • Error threshold: <strong>15.0%</strong> • OTLP Sampling: <strong>100%</strong>
+                </div>
+              </div>
+
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                <label style="display: block; font-weight: 600; color: var(--critical); margin-bottom: 4px;">Reset System State</label>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+                  Restore cluster health, clear simulated chaos, and synchronize incident baseline.
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="resetClusterChaos()">Reset Cluster to Baseline</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Postmortem Dossier & PR Modal -->
+  <div class="modal-backdrop" id="postmortemModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="badge badge-info" style="margin-bottom: 4px;">POST-INCIDENT REVIEW</span>
+          <h2 class="modal-title" id="modalIncidentHeader">Postmortem Dossier &amp; Git Pull Request</h2>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBodyContent">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modalDismissBtn">Close</button>
+        <button class="btn btn-secondary" onclick="copyModalMarkdown()">Copy Markdown</button>
+        <a href="#" class="btn btn-primary" id="modalDownloadPatchBtn" download="traceheal_hotfix.patch" target="_blank">Download Patch File</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Store Order Success Modal -->
+  <div class="modal-backdrop" id="storeOrderSuccessModal">
+    <div class="modal-content" style="max-width: 440px;">
+      <div id="storeOrderSuccessContent" style="padding: 24px; text-align: center;"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/demos.js"></script>
+  <script src="/static/js/topology.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

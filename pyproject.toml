@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traceheal"
+version = "1.0.0"
+description = "Autonomous Incident Investigation & Shadow-Verified Self-Healing Platform for Microservices"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "TraceHeal Engineering Team", email = "engineering@traceheal.dev" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.2.0",
+    "sqlalchemy>=2.0.28",
+    "aiosqlite>=0.20.0",
+    "python-dotenv>=1.0.1",
+    "httpx>=0.27.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "opentelemetry-api>=1.24.0",
+    "opentelemetry-sdk>=1.24.0",
+    "click>=8.1.0",
+]
+
+[project.scripts]
+traceheal = "cli.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*", "target_services*", "cli*"]

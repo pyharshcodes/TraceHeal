@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 80" width="420" height="80" fill="none">
+  <defs>
+    <!-- Core Gradients -->
+    <linearGradient id="nexusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+    <linearGradient id="healGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    
+    <!-- Glow Filter -->
+    <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Constellation Shield Base -->
+  <g transform="translate(14, 10)">
+    <!-- Circuit Telemetry Path Lines -->
+    <path d="M 30 6 L 54 48 L 6 48 Z" stroke="rgba(6, 182, 212, 0.4)" stroke-width="2.5" stroke-dasharray="4 3" fill="none" />
+    <path d="M 30 6 L 30 48" stroke="rgba(16, 185, 129, 0.35)" stroke-width="2" fill="none" />
+    <path d="M 12 36 L 48 36" stroke="rgba(6, 182, 212, 0.3)" stroke-width="2" fill="none" />
+
+    <!-- External Service Nodes (W3C Trace Spans) -->
+    <circle cx="30" cy="6" r="6" fill="#0F172A" stroke="#06B6D4" stroke-width="2.5" />
+    <circle cx="30" cy="6" r="2.5" fill="#38BDF8" />
+
+    <circle cx="54" cy="48" r="6" fill="#0F172A" stroke="#06B6D4" stroke-width="2.5" />
+    <circle cx="54" cy="48" r="2.5" fill="#38BDF8" />
+
+    <circle cx="6" cy="48" r="6" fill="#0F172A" stroke="#06B6D4" stroke-width="2.5" />
+    <circle cx="6" cy="48" r="2.5" fill="#38BDF8" />
+
+    <!-- Central Autonomous Healing Nexus -->
+    <circle cx="30" cy="34" r="9" fill="#0A1628" stroke="url(#healGrad)" stroke-width="2.5" filter="url(#coreGlow)" />
+    <!-- Pulse Core -->
+    <circle cx="30" cy="34" r="4.5" fill="#10B981" />
+    <!-- Cross/Heal Glyph -->
+    <path d="M 30 28 L 30 40 M 24 34 L 36 34" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" />
+  </g>
+
+  <!-- Wordmark & Subtitle -->
+  <g transform="translate(86, 26)">
+    <!-- Brand Title -->
+    <text x="0" y="24" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="28" font-weight="800" letter-spacing="-0.03em" fill="url(#textGrad)">
+      Trace<tspan fill="#06B6D4">Heal</tspan>
+    </text>
+
+    <!-- Version Badge -->
+    <rect x="146" y="7" width="46" height="18" rx="4" fill="rgba(6, 182, 212, 0.12)" stroke="rgba(6, 182, 212, 0.3)" stroke-width="1" />
+    <text x="153" y="20" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#38BDF8" letter-spacing="0.04em">v1.0</text>
+
+    <!-- Subtitle / Differentiator -->
+    <text x="1" y="42" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" fill="#64748B" letter-spacing="0.06em">
+      AUTONOMOUS SRE • PROOF BEFORE FIX
+    </text>
+  </g>
+</svg>
