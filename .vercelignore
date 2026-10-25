@@ -1,9 +1,5 @@
 # Large video files
-frontend/video
-frontend/video/*
-*.mp4
-*.webm
-*.mov
+frontend/video/vd2/*
 
 # Binaries & executables
 cloudflared.exe
